@@ -46,6 +46,14 @@
             android:theme="@style/Theme.Zeapi"
             android:parentActivityName=".MainActivity" />
             
+        <!-- 本地工具详情Activity -->
+        <activity
+            android:name=".ui.LocalToolDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Zeapi"
+            android:parentActivityName=".MainActivity" />
+            
         <!-- 崩溃处理Activity -->
         <activity
             android:name=".ui.crash.CrashActivity"

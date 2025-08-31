@@ -134,7 +134,7 @@
             android:layout_marginBottom="@dimen/margin_medium"
             android:alpha="0.6"
             android:src="@drawable/ic_search"
-            android:tint="@color/text_secondary" />
+            app:tint="@color/text_secondary" />
 
         <TextView
             android:id="@+id/tv_empty_title"
@@ -172,7 +172,7 @@
             android:layout_marginBottom="@dimen/margin_medium"
             android:alpha="0.6"
             android:src="@drawable/ic_error"
-            android:tint="@color/error" />
+            app:tint="@color/error" />
 
         <TextView
             android:layout_width="wrap_content"

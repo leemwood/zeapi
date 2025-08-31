@@ -43,8 +43,9 @@ class SplashActivity : AppCompatActivity() {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }
 
+    @Suppress("DEPRECATION", "MissingSuperCall")
     override fun onBackPressed() {
         // 在启动页面禁用返回键
-        // super.onBackPressed()
+        // 不调用super.onBackPressed()来禁用返回键
     }
 }

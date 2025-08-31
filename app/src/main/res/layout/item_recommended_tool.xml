@@ -28,7 +28,7 @@
             android:background="@drawable/circle_background"
             android:padding="@dimen/padding_small"
             android:src="@drawable/ic_tool_default"
-            android:tint="@color/primary"
+            app:tint="@color/primary"
             tools:ignore="UseAppTint" />
 
         <!-- 工具名称 -->
@@ -67,7 +67,7 @@
             android:layout_gravity="end"
             android:layout_marginTop="@dimen/margin_tiny"
             android:src="@drawable/ic_star"
-            android:tint="@color/accent"
+            app:tint="@color/accent"
             android:visibility="gone"
             tools:ignore="UseAppTint"
             tools:visibility="visible" />

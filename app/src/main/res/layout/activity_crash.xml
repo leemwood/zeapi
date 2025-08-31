@@ -20,7 +20,7 @@
             android:layout_width="@dimen/icon_large"
             android:layout_height="@dimen/icon_large"
             android:src="@drawable/ic_error"
-            android:tint="@color/error"
+            app:tint="@color/error"
             android:layout_marginBottom="@dimen/margin_medium" />
 
         <!-- 标题 -->

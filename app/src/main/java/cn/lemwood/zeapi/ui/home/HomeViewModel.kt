@@ -8,13 +8,13 @@ import androidx.lifecycle.viewModelScope
 import cn.lemwood.zeapi.data.SharedPreferencesManager
 import cn.lemwood.zeapi.data.model.Announcement
 import cn.lemwood.zeapi.data.model.Tool
-import cn.lemwood.zeapi.repository.ZeApiRepository
+import cn.lemwood.zeapi.repository.LocalZeApiRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.async
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = ZeApiRepository()
+    private val repository = LocalZeApiRepository()
     private val sharedPreferencesManager = SharedPreferencesManager(application)
     
     private val _announcements = MutableLiveData<List<Announcement>>()

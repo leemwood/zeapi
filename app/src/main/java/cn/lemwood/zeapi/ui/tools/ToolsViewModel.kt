@@ -5,17 +5,17 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import cn.lemwood.zeapi.data.SharedPreferencesManager
+
 import cn.lemwood.zeapi.data.model.Tool
-import cn.lemwood.zeapi.repository.ZeApiRepository
+import cn.lemwood.zeapi.service.LocalToolService
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ToolsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = ZeApiRepository()
-    private val sharedPreferencesManager = SharedPreferencesManager(application)
+    private val localToolService = LocalToolService()
+
     
     private val _tools = MutableLiveData<List<Tool>>()
     val tools: LiveData<List<Tool>> = _tools
@@ -35,8 +35,8 @@ class ToolsViewModel(application: Application) : AndroidViewModel(application) {
     private var isLoadingMore = false
     
     init {
-        // 初始化时更新仓库的请求头
-        updateRepositoryHeaders()
+        // 初始化时加载工具
+        loadTools()
     }
     
     fun loadTools() {
@@ -46,41 +46,18 @@ class ToolsViewModel(application: Application) : AndroidViewModel(application) {
             currentPage = 1
             
             try {
-                // 更新请求头
-                updateRepositoryHeaders()
+                // 直接从本地服务获取工具列表
+                val toolsList = localToolService.getAllTools()
+                _tools.value = toolsList
                 
-                // 获取当前请求头
-                val headers = getCurrentHeaders()
-                
-                // 加载工具列表
-                val result = repository.getTools(headers, currentPage)
-                
-                if (result.isSuccess) {
-                    val toolsList = result.getOrNull() ?: emptyList()
-                    _tools.value = toolsList
-                    
-                    // 如果有搜索查询，应用过滤
-                    if (currentSearchQuery.isNotEmpty()) {
-                        filterToolsLocally(currentSearchQuery)
-                    } else {
-                        _filteredTools.value = toolsList
-                    }
+                // 如果有搜索查询，应用过滤
+                if (currentSearchQuery.isNotEmpty()) {
+                    filterToolsLocally(currentSearchQuery)
                 } else {
-                    val errorMessage = result.exceptionOrNull()?.message ?: "加载工具失败"
-                    _error.value = errorMessage
-                    
-                    // 使用模拟数据作为后备
-                    val mockTools = getMockTools()
-                    _tools.value = mockTools
-                    _filteredTools.value = mockTools
+                    _filteredTools.value = toolsList
                 }
             } catch (e: Exception) {
                 _error.value = "加载工具失败: ${e.message}"
-                
-                // 使用模拟数据作为后备
-                val mockTools = getMockTools()
-                _tools.value = mockTools
-                _filteredTools.value = mockTools
             } finally {
                 _isLoading.value = false
             }
@@ -89,40 +66,6 @@ class ToolsViewModel(application: Application) : AndroidViewModel(application) {
     
     fun refreshTools() {
         loadTools()
-    }
-    
-    fun loadMoreTools() {
-        if (isLoadingMore || _isLoading.value == true) return
-        
-        viewModelScope.launch {
-            isLoadingMore = true
-            
-            try {
-                val headers = getCurrentHeaders()
-                val result = repository.getTools(headers, currentPage + 1)
-                
-                if (result.isSuccess) {
-                    val newTools = result.getOrNull() ?: emptyList()
-                    if (newTools.isNotEmpty()) {
-                        val currentTools = _tools.value ?: emptyList()
-                        val updatedTools = currentTools + newTools
-                        _tools.value = updatedTools
-                        currentPage++
-                        
-                        // 如果有搜索查询，重新应用过滤
-                        if (currentSearchQuery.isNotEmpty()) {
-                            filterToolsLocally(currentSearchQuery)
-                        } else {
-                            _filteredTools.value = updatedTools
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                // 静默处理加载更多的错误
-            } finally {
-                isLoadingMore = false
-            }
-        }
     }
     
     fun searchTools(query: String) {
@@ -140,25 +83,8 @@ class ToolsViewModel(application: Application) : AndroidViewModel(application) {
         searchJob = viewModelScope.launch {
             delay(500) // 500ms 防抖延迟
             
-            try {
-                // 更新请求头
-                updateRepositoryHeaders()
-                val headers = getCurrentHeaders()
-                
-                // 首先尝试服务器端搜索
-                val result = repository.searchTools(headers, query)
-                
-                if (result.isSuccess) {
-                    val searchResults = result.getOrNull() ?: emptyList()
-                    _filteredTools.value = searchResults
-                } else {
-                    // 如果服务器端搜索失败，使用本地过滤
-                    filterToolsLocally(query)
-                }
-            } catch (e: Exception) {
-                // 如果网络搜索失败，使用本地过滤
-                filterToolsLocally(query)
-            }
+            // 直接使用本地过滤
+            filterToolsLocally(query)
         }
     }
     
@@ -180,131 +106,5 @@ class ToolsViewModel(application: Application) : AndroidViewModel(application) {
         // TODO: 处理工具点击事件
         // 可以通过Intent打开浏览器访问工具URL
         // 或者打开工具详情页面
-    }
-    
-    /**
-     * 更新仓库的请求头
-     */
-    private fun updateRepositoryHeaders() {
-        val headers = getCurrentHeaders()
-        repository.updateHeaders(headers)
-    }
-    
-    /**
-     * 获取当前请求头
-     */
-    private fun getCurrentHeaders(): Map<String, String> {
-        val headers = mutableMapOf<String, String>()
-        
-        // 添加 User-Agent
-        val userAgent = sharedPreferencesManager.getUserAgent()
-        if (userAgent.isNotEmpty()) {
-            headers["User-Agent"] = userAgent
-        }
-        
-        // 添加 Authorization
-        val authorization = sharedPreferencesManager.getAuthorization()
-        if (authorization.isNotEmpty()) {
-            headers["Authorization"] = authorization
-        }
-        
-        // 添加自定义请求头
-        val customHeaders = sharedPreferencesManager.getCustomHeaders()
-        if (customHeaders.isNotEmpty()) {
-            try {
-                val jsonObject = org.json.JSONObject(customHeaders)
-                val keys = jsonObject.keys()
-                while (keys.hasNext()) {
-                    val key = keys.next()
-                    val value = jsonObject.getString(key)
-                    headers[key] = value
-                }
-            } catch (e: Exception) {
-                // 忽略解析错误
-            }
-        }
-        
-        return headers
-    }
-    
-    /**
-     * 获取模拟工具数据
-     */
-    private fun getMockTools(): List<Tool> {
-        return listOf(
-            Tool(
-                id = "1",
-                name = "文本处理",
-                description = "提供各种文本处理功能，包括格式转换、编码解码等",
-                category = "文本工具",
-                url = "https://zeapi.ink/text",
-                isRecommended = true
-            ),
-            Tool(
-                id = "2",
-                name = "图片处理",
-                description = "图片格式转换、压缩、裁剪等功能",
-                category = "图片工具",
-                url = "https://zeapi.ink/image",
-                isRecommended = true
-            ),
-            Tool(
-                id = "3",
-                name = "网络工具",
-                description = "IP查询、网络测试、域名解析等",
-                category = "网络工具",
-                url = "https://zeapi.ink/network",
-                isRecommended = true
-            ),
-            Tool(
-                id = "4",
-                name = "加密解密",
-                description = "各种加密解密算法，哈希计算等",
-                category = "安全工具",
-                url = "https://zeapi.ink/crypto"
-            ),
-            Tool(
-                id = "5",
-                name = "时间工具",
-                description = "时间戳转换、时区转换等时间相关工具",
-                category = "时间工具",
-                url = "https://zeapi.ink/time"
-            ),
-            Tool(
-                id = "6",
-                name = "JSON工具",
-                description = "JSON格式化、验证、转换等功能",
-                category = "开发工具",
-                url = "https://zeapi.ink/json"
-            ),
-            Tool(
-                id = "7",
-                name = "二维码生成",
-                description = "生成各种类型的二维码",
-                category = "生成工具",
-                url = "https://zeapi.ink/qrcode"
-            ),
-            Tool(
-                id = "8",
-                name = "颜色工具",
-                description = "颜色转换、调色板、颜色搭配等",
-                category = "设计工具",
-                url = "https://zeapi.ink/color"
-            ),
-            Tool(
-                id = "9",
-                name = "Base64编解码",
-                description = "Base64编码和解码工具",
-                category = "编码工具",
-                url = "https://zeapi.ink/base64"
-            ),
-            Tool(
-                id = "10",
-                name = "URL编解码",
-                description = "URL编码和解码工具",
-                category = "编码工具",
-                url = "https://zeapi.ink/url"
-            )
-        )
     }
 }

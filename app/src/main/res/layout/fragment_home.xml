@@ -31,7 +31,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/margin_medium"
+                    android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
                     android:layout_marginTop="@dimen/margin_medium"
                     android:layout_marginBottom="@dimen/margin_small"
                     android:text="📢 最新公告"
@@ -45,7 +46,8 @@
                     android:id="@+id/rv_announcements"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/margin_small"
+                    android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginRight="@dimen/margin_small"
                     android:clipToPadding="false"
                     android:nestedScrollingEnabled="false"
                     android:paddingHorizontal="@dimen/padding_small"
@@ -58,8 +60,10 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/divider_height"
-                android:layout_marginHorizontal="@dimen/margin_medium"
-                android:layout_marginVertical="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_medium"
                 android:background="@color/divider" />
 
             <!-- 推荐工具区域 -->
@@ -74,7 +78,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/margin_medium"
+                    android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
                     android:layout_marginBottom="@dimen/margin_small"
                     android:text="⭐ 推荐工具"
                     android:textAppearance="@style/TextSubtitle"
@@ -113,7 +118,7 @@
                     android:layout_marginBottom="@dimen/margin_medium"
                     android:alpha="0.6"
                     android:src="@drawable/ic_info"
-                    android:tint="@color/text_secondary" />
+                    app:tint="@color/text_secondary" />
 
                 <TextView
                     android:layout_width="wrap_content"

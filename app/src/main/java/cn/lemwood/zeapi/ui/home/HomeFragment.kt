@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import cn.lemwood.zeapi.ToolDetailActivity
+import cn.lemwood.zeapi.ui.LocalToolDetailActivity
 import cn.lemwood.zeapi.databinding.FragmentHomeBinding
 import cn.lemwood.zeapi.ui.home.adapter.AnnouncementAdapter
 import cn.lemwood.zeapi.ui.home.adapter.ToolAdapter
@@ -55,9 +55,8 @@ class HomeFragment : Fragment() {
         // 设置推荐工具列表
         recommendedToolAdapter = ToolAdapter { tool ->
             // 点击推荐工具时跳转到详情页面
-            val intent = Intent(requireContext(), ToolDetailActivity::class.java).apply {
-                putExtra(ToolDetailActivity.EXTRA_TOOL_ID, tool.id)
-                putExtra(ToolDetailActivity.EXTRA_TOOL_URL, tool.url)
+            val intent = Intent(requireContext(), LocalToolDetailActivity::class.java).apply {
+                putExtra(LocalToolDetailActivity.EXTRA_TOOL_ID, tool.id)
             }
             startActivity(intent)
         }

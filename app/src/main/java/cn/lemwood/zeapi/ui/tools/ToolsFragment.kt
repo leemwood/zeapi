@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.lemwood.zeapi.databinding.FragmentToolsBinding
 import cn.lemwood.zeapi.ui.home.adapter.ToolAdapter
+import cn.lemwood.zeapi.ui.LocalToolDetailActivity
 
 class ToolsFragment : Fragment() {
 
@@ -44,7 +45,11 @@ class ToolsFragment : Fragment() {
     
     private fun setupRecyclerView() {
         toolAdapter = ToolAdapter { tool ->
-            toolsViewModel.onToolClicked(tool)
+            // 跳转到本地工具详情页面
+            val intent = android.content.Intent(requireContext(), LocalToolDetailActivity::class.java).apply {
+                 putExtra(LocalToolDetailActivity.EXTRA_TOOL_ID, tool.id)
+            }
+            startActivity(intent)
         }
         binding.rvTools.apply {
             layoutManager = LinearLayoutManager(context)
