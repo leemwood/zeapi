@@ -1,0 +1,79 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Zeapi" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_variant</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondary_variant</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/primary_variant</item>
+        <!-- Background colors -->
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorOnBackground">@color/text_primary</item>
+        <!-- Error colors -->
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/white</item>
+        
+        <!-- Custom attributes -->
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        
+        <!-- ActionBar style -->
+        <item name="actionBarStyle">@style/ToolbarStyle</item>
+        
+        <!-- Button styles -->
+        <item name="materialButtonStyle">@style/ButtonPrimary</item>
+        <item name="materialButtonOutlinedStyle">@style/ButtonSecondary</item>
+        
+        <!-- Card style -->
+        <item name="materialCardViewStyle">@style/CardViewStyle</item>
+        
+        <!-- TextInputLayout style -->
+        <item name="textInputStyle">@style/EditTextStyle</item>
+        
+        <!-- BottomNavigationView style -->
+        <item name="bottomNavigationStyle">@style/BottomNavigationStyle</item>
+        
+        <!-- FloatingActionButton style -->
+        <item name="floatingActionButtonStyle">@style/FabStyle</item>
+        
+        <!-- Progress bar style -->
+        <item name="circularProgressIndicatorStyle">@style/ProgressBarStyle</item>
+    </style>
+    
+    <!-- 无ActionBar主题，用于主Activity -->
+    <style name="Theme.Zeapi.NoActionBar" parent="Theme.Zeapi">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+    
+    <!-- 启动页面主题 -->
+    <style name="Theme.Zeapi.Splash" parent="Theme.Zeapi">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="p">shortEdges</item>
+    </style>
+    
+    <!-- 工具详情页面主题 -->
+    <style name="Theme.Zeapi.ToolDetail" parent="Theme.Zeapi">
+        <item name="android:windowBackground">@color/background</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+    
+</resources>

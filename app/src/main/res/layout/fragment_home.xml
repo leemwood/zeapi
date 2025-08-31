@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/padding_large">
+
+            <!-- 公告区域 -->
+            <LinearLayout
+                android:id="@+id/layout_announcements"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <!-- 公告标题 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_medium"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:layout_marginBottom="@dimen/margin_small"
+                    android:text="📢 最新公告"
+                    android:textAppearance="@style/TextSubtitle"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/text_size_subtitle"
+                    android:textStyle="bold" />
+
+                <!-- 公告列表 -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_announcements"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_small"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    android:paddingHorizontal="@dimen/padding_small"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_announcement" />
+
+            </LinearLayout>
+
+            <!-- 分割线 -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginHorizontal="@dimen/margin_medium"
+                android:layout_marginVertical="@dimen/margin_medium"
+                android:background="@color/divider" />
+
+            <!-- 推荐工具区域 -->
+            <LinearLayout
+                android:id="@+id/layout_recommended_tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <!-- 推荐工具标题 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_medium"
+                    android:layout_marginBottom="@dimen/margin_small"
+                    android:text="⭐ 推荐工具"
+                    android:textAppearance="@style/TextSubtitle"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/text_size_subtitle"
+                    android:textStyle="bold" />
+
+                <!-- 推荐工具列表 -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_recommended_tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    android:paddingHorizontal="@dimen/padding_medium"
+                    tools:itemCount="5"
+                    tools:listitem="@layout/item_recommended_tool" />
+
+            </LinearLayout>
+
+            <!-- 空状态视图 -->
+            <LinearLayout
+                android:id="@+id/layout_empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="gone">
+
+                <ImageView
+                    android:layout_width="@dimen/empty_state_icon_size"
+                    android:layout_height="@dimen/empty_state_icon_size"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:alpha="0.6"
+                    android:src="@drawable/ic_info"
+                    android:tint="@color/text_secondary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_small"
+                    android:text="暂无数据"
+                    android:textAppearance="@style/TextBody"
+                    android:textColor="@color/text_secondary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="下拉刷新重新加载"
+                    android:textAppearance="@style/TextCaption"
+                    android:textColor="@color/text_secondary" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

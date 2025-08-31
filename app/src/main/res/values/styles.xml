@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!-- 按钮样式 -->
+    <style name="ButtonPrimary" parent="Widget.MaterialComponents.Button">
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:textSize">@dimen/text_size_button</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/primary</item>
+        <item name="cornerRadius">@dimen/corner_radius_button</item>
+        <item name="android:layout_marginHorizontal">@dimen/margin_medium</item>
+        <item name="android:layout_marginVertical">@dimen/margin_small</item>
+        <item name="android:elevation">@dimen/elevation_button</item>
+        <item name="rippleColor">@color/primary_variant</item>
+    </style>
+    
+    <style name="ButtonSecondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:textSize">@dimen/text_size_button</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="strokeColor">@color/primary</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cornerRadius">@dimen/corner_radius_button</item>
+        <item name="android:layout_marginHorizontal">@dimen/margin_medium</item>
+        <item name="android:layout_marginVertical">@dimen/margin_small</item>
+        <item name="rippleColor">@color/primary_light</item>
+    </style>
+    
+    <!-- 卡片样式 -->
+    <style name="CardViewStyle" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">@dimen/corner_radius_card</item>
+        <item name="cardElevation">@dimen/elevation_card</item>
+        <item name="cardBackgroundColor">@color/surface</item>
+        <item name="android:layout_margin">@dimen/margin_medium</item>
+        <item name="contentPadding">@dimen/padding_card</item>
+    </style>
+    
+    <!-- 输入框样式 -->
+    <style name="EditTextStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_marginHorizontal">@dimen/margin_medium</item>
+        <item name="android:layout_marginVertical">@dimen/margin_small</item>
+        <item name="boxCornerRadiusTopStart">@dimen/corner_radius_input</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/corner_radius_input</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/corner_radius_input</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/corner_radius_input</item>
+        <item name="boxStrokeColor">@color/primary</item>
+        <item name="hintTextColor">@color/text_secondary</item>
+    </style>
+    
+    <!-- 标题样式 -->
+    <style name="TextTitle" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textSize">@dimen/text_size_title</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginBottom">@dimen/margin_medium</item>
+    </style>
+    
+    <style name="TextSubtitle" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textSize">@dimen/text_size_subtitle</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
+    </style>
+    
+    <!-- 正文样式 -->
+    <style name="TextBody" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">@dimen/text_size_body</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+    
+    <style name="TextBodySecondary" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textSize">@dimen/text_size_body_small</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:lineSpacingExtra">1dp</item>
+    </style>
+    
+    <!-- 标签样式 -->
+    <style name="TextCaption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">@dimen/text_size_caption</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+    
+    <!-- 工具栏样式 -->
+    <style name="ToolbarStyle" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="android:background">@color/primary</item>
+        <item name="titleTextColor">@color/white</item>
+        <item name="subtitleTextColor">@color/white</item>
+        <item name="android:elevation">@dimen/elevation_toolbar</item>
+    </style>
+    
+    <!-- 底部导航栏样式 -->
+    <style name="BottomNavigationStyle" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:background">@color/surface</item>
+        <item name="itemIconTint">@color/bottom_nav_color</item>
+        <item name="itemTextColor">@color/bottom_nav_color</item>
+        <item name="android:elevation">@dimen/elevation_bottom_nav</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+    
+    <!-- 列表项样式 -->
+    <style name="ListItemStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/list_item_height</item>
+        <item name="android:padding">@dimen/padding_list_item</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+    
+    <!-- 分割线样式 -->
+    <style name="DividerStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/divider_height</item>
+        <item name="android:background">@color/divider</item>
+        <item name="android:layout_marginHorizontal">@dimen/margin_medium</item>
+    </style>
+    
+    <!-- 加载指示器样式 -->
+    <style name="ProgressBarStyle" parent="Widget.MaterialComponents.CircularProgressIndicator">
+        <item name="android:layout_width">@dimen/progress_size</item>
+        <item name="android:layout_height">@dimen/progress_size</item>
+        <item name="indicatorColor">@color/primary</item>
+        <item name="trackColor">@color/primary_light</item>
+    </style>
+    
+    <!-- 图标样式 -->
+    <style name="IconStyle">
+        <item name="android:layout_width">@dimen/icon_size</item>
+        <item name="android:layout_height">@dimen/icon_size</item>
+        <item name="android:tint">@color/icon_tint</item>
+    </style>
+    
+    <style name="IconSmallStyle">
+        <item name="android:layout_width">@dimen/icon_size_small</item>
+        <item name="android:layout_height">@dimen/icon_size_small</item>
+        <item name="android:tint">@color/icon_tint</item>
+    </style>
+    
+    <!-- 浮动操作按钮样式 -->
+    <style name="FabStyle" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:layout_margin">@dimen/margin_large</item>
+        <item name="backgroundTint">@color/primary</item>
+        <item name="tint">@color/white</item>
+        <item name="elevation">@dimen/elevation_fab</item>
+    </style>
+    
+</resources>

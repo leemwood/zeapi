@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 主色调 -->
+    <color name="primary">#2196F3</color>
+    <color name="primary_variant">#1976D2</color>
+    <color name="on_primary">#FFFFFF</color>
+    
+    <!-- 次要色调 -->
+    <color name="secondary">#03DAC6</color>
+    <color name="secondary_variant">#018786</color>
+    <color name="on_secondary">#000000</color>
+    
+    <!-- 背景色 -->
+    <color name="background">#FAFAFA</color>
+    <color name="on_background">#212121</color>
+    
+    <!-- 表面色 -->
+    <color name="surface">#FFFFFF</color>
+    <color name="on_surface">#212121</color>
+    
+    <!-- 错误色 -->
+    <color name="error">#B00020</color>
+    <color name="on_error">#FFFFFF</color>
+    
+    <!-- 边框和分割线 -->
+    <color name="outline">#E0E0E0</color>
+    <color name="outline_variant">#BDBDBD</color>
+    
+    <!-- 文本颜色 -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#9E9E9E</color>
+    
+    <!-- 状态颜色 -->
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FF9800</color>
+    <color name="info">#2196F3</color>
+    
+    <!-- 半透明颜色 -->
+    <color name="black_overlay">#66000000</color>
+    <color name="white_overlay">#66FFFFFF</color>
+    
+    <!-- 卡片阴影 -->
+    <color name="shadow">#1A000000</color>
+    
+    <!-- 缺失的颜色资源 -->
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#757575</color>
+    <color name="primary_light">#BBDEFB</color>
+    <color name="divider">#E0E0E0</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="icon_tint">#757575</color>
+</resources>

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/default_margin">
+
+        <!-- 请求头设置卡片 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/default_margin">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="请求头配置"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary_text"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="配置API请求时使用的自定义请求头"
+                    android:textSize="14sp"
+                    android:textColor="@color/secondary_text"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- User-Agent 设置 -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:hint="User-Agent"
+                    app:boxStrokeColor="@color/primary"
+                    app:hintTextColor="@color/primary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextUserAgent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:maxLines="3" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Authorization 设置 -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:hint="Authorization"
+                    app:boxStrokeColor="@color/primary"
+                    app:hintTextColor="@color/primary"
+                    app:endIconMode="password_toggle">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextAuthorization"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:maxLines="3" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- 自定义请求头 -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:hint="自定义请求头 (JSON格式)"
+                    app:boxStrokeColor="@color/primary"
+                    app:hintTextColor="@color/primary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextCustomHeaders"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        android:minLines="3"
+                        android:maxLines="8"
+                        android:gravity="top"
+                        android:fontFamily="monospace" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="示例: {&quot;X-API-Key&quot;: &quot;your-api-key&quot;, &quot;Content-Type&quot;: &quot;application/json&quot;}"
+                    android:textSize="12sp"
+                    android:textColor="@color/secondary_text"
+                    android:fontFamily="monospace"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- 操作按钮 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="end">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonReset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="重置"
+                        android:layout_marginEnd="8dp"
+                        style="@style/Widget.Material3.Button.TextButton" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonSave"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="保存" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 应用信息卡片 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/default_margin">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="应用信息"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary_text"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- 应用版本 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="应用版本"
+                        android:textSize="14sp"
+                        android:textColor="@color/primary_text" />
+
+                    <TextView
+                        android:id="@+id/textViewVersion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1.0.0"
+                        android:textSize="14sp"
+                        android:textColor="@color/secondary_text" />
+
+                </LinearLayout>
+
+                <!-- 作者信息 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="作者"
+                        android:textSize="14sp"
+                        android:textColor="@color/primary_text" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="柠枺"
+                        android:textSize="14sp"
+                        android:textColor="@color/secondary_text" />
+
+                </LinearLayout>
+
+                <!-- GitHub 链接 -->
+                <LinearLayout
+                    android:id="@+id/layoutGitHub"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="GitHub"
+                        android:textSize="14sp"
+                        android:textColor="@color/primary_text" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="leemwood/zeapi"
+                        android:textSize="14sp"
+                        android:textColor="@color/primary" />
+
+                </LinearLayout>
+
+                <!-- 联系邮箱 -->
+                <LinearLayout
+                    android:id="@+id/layoutEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="联系邮箱"
+                        android:textSize="14sp"
+                        android:textColor="@color/primary_text" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3436464181@qq.com"
+                        android:textSize="14sp"
+                        android:textColor="@color/primary" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+</ScrollView>

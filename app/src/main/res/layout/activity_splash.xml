@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary"
+    tools:context=".SplashActivity">
+
+    <!-- 应用图标 -->
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/ic_launcher_foreground"
+        app:layout_constraintBottom_toTopOf="@+id/tv_app_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <!-- 应用名称 -->
+    <TextView
+        android:id="@+id/tv_app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/app_name"
+        android:textColor="@android:color/white"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tv_app_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_logo" />
+
+    <!-- 应用描述 -->
+    <TextView
+        android:id="@+id/tv_app_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp"
+        android:text="基于zeapi.link的工具集合"
+        android:textColor="@color/on_primary"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/progress_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_app_name" />
+
+    <!-- 加载进度条 -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:indeterminateTint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_app_description" />
+
+    <!-- 版本信息 -->
+    <TextView
+        android:id="@+id/tv_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="v1.0.0"
+        android:textColor="@color/on_primary"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

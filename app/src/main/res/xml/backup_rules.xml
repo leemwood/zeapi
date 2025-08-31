@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- 包含SharedPreferences数据 -->
+    <include domain="sharedpref" path="."/>
+    <!-- 排除敏感数据 -->
+    <exclude domain="sharedpref" path="sensitive_data.xml"/>
+</full-backup-content>

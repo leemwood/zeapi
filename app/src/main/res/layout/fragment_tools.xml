@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <!-- 搜索区域 -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_medium"
+        app:cardCornerRadius="@dimen/corner_radius_card"
+        app:cardElevation="@dimen/elevation_card"
+        app:cardBackgroundColor="@color/surface">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_medium">
+
+            <!-- 搜索输入框 -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="搜索工具..."
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusBottomEnd="@dimen/corner_radius_input"
+                app:boxCornerRadiusBottomStart="@dimen/corner_radius_input"
+                app:boxCornerRadiusTopEnd="@dimen/corner_radius_input"
+                app:boxCornerRadiusTopStart="@dimen/corner_radius_input"
+                app:boxStrokeColor="@color/primary"
+                app:hintTextColor="@color/text_secondary"
+                app:startIconDrawable="@drawable/ic_search"
+                app:startIconTint="@color/text_secondary">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/text_size_body" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- 清除搜索按钮 -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_clear_search"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_small"
+                android:minWidth="0dp"
+                android:text="清除"
+                android:textColor="@color/primary"
+                android:textSize="@dimen/text_size_caption"
+                android:visibility="gone"
+                app:cornerRadius="@dimen/corner_radius_button" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- 工具列表区域 -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingHorizontal="@dimen/padding_small"
+            android:paddingBottom="@dimen/padding_medium"
+            android:scrollbars="vertical"
+            tools:itemCount="10"
+            tools:listitem="@layout/item_tool" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <!-- 加载状态视图 -->
+    <LinearLayout
+        android:id="@+id/layout_loading"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="@dimen/progress_size"
+            android:layout_height="@dimen/progress_size"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:indeterminate="true"
+            app:indicatorColor="@color/primary"
+            app:trackColor="@color/primary_light" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="加载中..."
+            android:textAppearance="@style/TextBody"
+            android:textColor="@color/text_secondary" />
+
+    </LinearLayout>
+
+    <!-- 空状态视图 -->
+    <LinearLayout
+        android:id="@+id/layout_empty_state"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+        <ImageView
+            android:layout_width="@dimen/empty_state_icon_size"
+            android:layout_height="@dimen/empty_state_icon_size"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:alpha="0.6"
+            android:src="@drawable/ic_search"
+            android:tint="@color/text_secondary" />
+
+        <TextView
+            android:id="@+id/tv_empty_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:text="暂无工具"
+            android:textAppearance="@style/TextBody"
+            android:textColor="@color/text_secondary" />
+
+        <TextView
+            android:id="@+id/tv_empty_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="尝试其他搜索关键词"
+            android:textAppearance="@style/TextCaption"
+            android:textColor="@color/text_secondary" />
+
+    </LinearLayout>
+
+    <!-- 错误状态视图 -->
+    <LinearLayout
+        android:id="@+id/layout_error_state"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+        <ImageView
+            android:layout_width="@dimen/empty_state_icon_size"
+            android:layout_height="@dimen/empty_state_icon_size"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:alpha="0.6"
+            android:src="@drawable/ic_error"
+            android:tint="@color/error" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:text="加载失败"
+            android:textAppearance="@style/TextBody"
+            android:textColor="@color/error" />
+
+        <TextView
+            android:id="@+id/tv_error_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:text="网络连接异常"
+            android:textAppearance="@style/TextCaption"
+            android:textColor="@color/text_secondary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_retry"
+            style="@style/ButtonSecondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="重试" />
+
+    </LinearLayout>
+
+</LinearLayout>

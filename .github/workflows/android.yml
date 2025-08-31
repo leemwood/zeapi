@@ -1,0 +1,80 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Run tests
+      run: ./gradlew test
+
+    - name: Build with Gradle
+      run: ./gradlew assembleDebug
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: zeapi-debug-apk
+        path: app/build/outputs/apk/debug/*.apk
+
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Cache Gradle packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+    
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    
+    - name: Run lint
+      run: ./gradlew lintDebug
+    
+    - name: Upload lint results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: lint-results
+        path: app/build/reports/lint-results-debug.html

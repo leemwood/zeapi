@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 基础间距 -->
+    <dimen name="margin_extra_small">4dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_large">24dp</dimen>
+    <dimen name="margin_extra_large">32dp</dimen>
+    
+    <!-- 内边距 -->
+    <dimen name="padding_extra_small">4dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+    <dimen name="padding_large">24dp</dimen>
+    <dimen name="padding_extra_large">32dp</dimen>
+    
+    <!-- 圆角半径 -->
+    <dimen name="corner_radius_small">4dp</dimen>
+    <dimen name="corner_radius_medium">8dp</dimen>
+    <dimen name="corner_radius_large">12dp</dimen>
+    <dimen name="corner_radius_button">8dp</dimen>
+    <dimen name="corner_radius_card">12dp</dimen>
+    <dimen name="corner_radius_input">8dp</dimen>
+    
+    <!-- 按钮尺寸 -->
+    <dimen name="button_height">48dp</dimen>
+    <dimen name="button_height_small">36dp</dimen>
+    <dimen name="button_height_large">56dp</dimen>
+    <dimen name="button_min_width">88dp</dimen>
+    
+    <!-- 卡片尺寸 -->
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_elevation_pressed">8dp</dimen>
+    <dimen name="padding_card">16dp</dimen>
+    
+    <!-- 输入框尺寸 -->
+    <dimen name="input_height">56dp</dimen>
+    <dimen name="input_min_height">48dp</dimen>
+    
+    <!-- 图标尺寸 -->
+    <dimen name="icon_size_small">16dp</dimen>
+    <dimen name="icon_size">24dp</dimen>
+    <dimen name="icon_size_medium">32dp</dimen>
+    <dimen name="icon_size_large">48dp</dimen>
+    <dimen name="icon_size_extra_large">64dp</dimen>
+    
+    <!-- 文本大小 -->
+    <dimen name="text_size_caption">12sp</dimen>
+    <dimen name="text_size_body_small">14sp</dimen>
+    <dimen name="text_size_body">16sp</dimen>
+    <dimen name="text_size_subtitle">18sp</dimen>
+    <dimen name="text_size_title">20sp</dimen>
+    <dimen name="text_size_headline">24sp</dimen>
+    <dimen name="text_size_button">14sp</dimen>
+    
+    <!-- 列表项尺寸 -->
+    <dimen name="list_item_height">72dp</dimen>
+    <dimen name="list_item_height_small">56dp</dimen>
+    <dimen name="list_item_height_large">88dp</dimen>
+    <dimen name="padding_list_item">16dp</dimen>
+    
+    <!-- 底部导航栏 -->
+    <dimen name="bottom_nav_height">56dp</dimen>
+    <dimen name="bottom_nav_icon_size">24dp</dimen>
+    
+    <!-- 工具栏 -->
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
+    
+    <!-- 分割线 -->
+    <dimen name="divider_height">1dp</dimen>
+    <dimen name="divider_thickness">0.5dp</dimen>
+    
+    <!-- 阴影和高度 -->
+    <dimen name="elevation_card">4dp</dimen>
+    <dimen name="elevation_button">2dp</dimen>
+    <dimen name="elevation_fab">6dp</dimen>
+    <dimen name="elevation_toolbar">4dp</dimen>
+    <dimen name="elevation_bottom_nav">8dp</dimen>
+    
+    <!-- 进度指示器 -->
+    <dimen name="progress_size">48dp</dimen>
+    <dimen name="progress_size_small">32dp</dimen>
+    <dimen name="progress_size_large">64dp</dimen>
+    
+    <!-- 空状态图标 -->
+    <dimen name="empty_state_icon_size">96dp</dimen>
+    
+    <!-- 启动页面 -->
+    <dimen name="splash_logo_size">120dp</dimen>
+    <dimen name="splash_progress_size">32dp</dimen>
+    
+    <!-- 工具详情页面 -->
+    <dimen name="tool_detail_header_height">200dp</dimen>
+    <dimen name="tool_detail_fab_margin">16dp</dimen>
+    
+    <!-- 推荐工具卡片 -->
+    <dimen name="recommended_tool_width">160dp</dimen>
+    <dimen name="recommended_tool_height">120dp</dimen>
+    
+    <!-- 公告卡片 -->
+    <dimen name="announcement_min_height">80dp</dimen>
+    
+    <!-- 设置页面 -->
+    <dimen name="settings_section_spacing">24dp</dimen>
+    <dimen name="settings_item_height">64dp</dimen>
+    
+    <!-- 缺失的尺寸资源 -->
+    <dimen name="spacing_xs">4dp</dimen>
+    <dimen name="spacing_sm">8dp</dimen>
+    <dimen name="spacing_md">16dp</dimen>
+    <dimen name="spacing_lg">24dp</dimen>
+    <dimen name="spacing_xl">32dp</dimen>
+    <dimen name="text_size_sm">14sp</dimen>
+    <dimen name="text_size_md">16sp</dimen>
+    <dimen name="text_size_lg">18sp</dimen>
+    <dimen name="text_size_xl">20sp</dimen>
+    <dimen name="card_corner_radius">12dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
+    <dimen name="default_margin">16dp</dimen>
+    <dimen name="button_corner_radius">8dp</dimen>
+    <dimen name="edittext_corner_radius">8dp</dimen>
+    
+</resources>

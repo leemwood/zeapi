@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ToolDetailActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_md">
+
+            <!-- 工具信息卡片 -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_md"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="@dimen/card_elevation">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_padding">
+
+                    <TextView
+                        android:id="@+id/tv_tool_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_title"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_primary"
+                        tools:text="工具名称" />
+
+                    <TextView
+                        android:id="@+id/tv_tool_category"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_xs"
+                        android:background="@drawable/category_background"
+                        android:paddingHorizontal="@dimen/spacing_sm"
+                        android:paddingVertical="@dimen/spacing_xs"
+                        android:textColor="@color/on_primary"
+                        android:textSize="@dimen/text_size_sm"
+                        tools:text="工具分类" />
+
+                    <TextView
+                        android:id="@+id/tv_tool_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_md"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="@dimen/text_size_md"
+                        tools:text="工具描述信息" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 工具详情卡片 -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_tool_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_md"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="@dimen/card_elevation">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_padding">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="详细信息"
+                        android:textSize="@dimen/text_size_lg"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_primary" />
+
+                    <TextView
+                        android:id="@+id/tv_tool_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_sm"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="@dimen/text_size_md"
+                        tools:text="工具的详细信息和使用说明" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 操作按钮 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_open_tool"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/spacing_sm"
+                    android:text="打开工具"
+                    android:textColor="@color/on_primary"
+                    app:backgroundTint="@color/primary"
+                    app:cornerRadius="@dimen/button_corner_radius" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_share_tool"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/spacing_sm"
+                    android:text="分享工具"
+                    android:textColor="@color/on_secondary"
+                    app:backgroundTint="@color/secondary"
+                    app:cornerRadius="@dimen/button_corner_radius"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- 加载状态 -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

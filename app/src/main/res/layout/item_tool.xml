@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/imageViewToolIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/ic_tools_24"
+            android:contentDescription="工具图标" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewToolName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="工具名称" />
+
+            <TextView
+                android:id="@+id/textViewToolDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginTop="2dp"
+                android:text="工具描述" />
+
+            <TextView
+                android:id="@+id/textViewToolCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/primary"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/category_background"
+                android:padding="4dp"
+                android:text="分类" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageViewRecommended"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="top"
+            android:src="@drawable/ic_star_24"
+            android:visibility="gone"
+            android:contentDescription="推荐" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
