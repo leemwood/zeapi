@@ -1,6 +1,7 @@
 package cn.lemwood.zeapi.network
 
 import cn.lemwood.zeapi.data.model.Announcement
+import cn.lemwood.zeapi.data.model.GitHubFileContent
 import cn.lemwood.zeapi.data.model.Tool
 import retrofit2.Response
 import retrofit2.http.GET

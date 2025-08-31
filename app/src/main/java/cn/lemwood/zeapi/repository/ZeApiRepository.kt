@@ -39,18 +39,18 @@ class ZeApiRepository {
                 val jsonResponse = gitHubApiService.getAnnouncementsJson(headers)
                 if (jsonResponse.isSuccessful) {
                     val fileContent = jsonResponse.body()
-                    fileContent?.let {
+                    fileContent?.let { content ->
                         try {
                             // 解码Base64内容
-                            val jsonContent = if (it.encoding == "base64") {
-                                String(Base64.decode(it.content.replace("\n", ""), Base64.DEFAULT))
+                            val jsonContent = if (content.encoding == "base64") {
+                                String(Base64.decode(content.content.replace("\n", ""), Base64.DEFAULT))
                             } else {
-                                it.content
+                                content.content
                             }
                             
                             // 解析JSON内容
                             val gson = Gson()
-                            val announcementsResponse = gson.fromJson(jsonContent, AnnouncementsResponse::class.java)
+                            val announcementsResponse = gson.fromJson(jsonContent, AnnouncementsResponse::class.java) as AnnouncementsResponse
                             
                             // 如果成功获取到公告数据，直接返回
                             if (announcementsResponse.announcements.isNotEmpty()) {
