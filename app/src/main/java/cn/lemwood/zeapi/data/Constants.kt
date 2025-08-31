@@ -18,6 +18,11 @@ object Constants {
     const val GITHUB_API_BASE_URL = "https://api.github.com/"
     
     /**
+     * 备用 GitHub API 地址
+     */
+    const val GITHUB_API_BACKUP_URL = "https://gayhub.lemwood.cn/"
+    
+    /**
      * GitHub 仓库地址
      */
     const val GITHUB_REPO_URL = "https://github.com/leemwood/zeapi"

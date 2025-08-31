@@ -20,6 +20,7 @@ class ZeApiRepository {
     private val networkClient = NetworkClient.getInstance()
     private val zeApiService: ApiService by lazy { networkClient.createZeApiService() }
     private val gitHubApiService: ApiService by lazy { networkClient.createGitHubApiService() }
+    private val backupGitHubApiService: ApiService by lazy { networkClient.createBackupGitHubApiService() }
     
     /**
      * 更新请求头
@@ -35,31 +36,16 @@ class ZeApiRepository {
     suspend fun getAnnouncements(headers: Map<String, String>): Result<List<Announcement>> {
         return withContext(Dispatchers.IO) {
             try {
-                // 首先尝试从仓库的JSON文件获取公告
-                val jsonResponse = gitHubApiService.getAnnouncementsJson(headers)
-                if (jsonResponse.isSuccessful) {
-                    val fileContent = jsonResponse.body()
-                    fileContent?.let { content ->
-                        try {
-                            // 解码Base64内容
-                            val jsonContent = if (content.encoding == "base64") {
-                                String(Base64.decode(content.content.replace("\n", ""), Base64.DEFAULT))
-                            } else {
-                                content.content
-                            }
-                            
-                            // 解析JSON内容
-                            val gson = Gson()
-                            val announcementsResponse = gson.fromJson(jsonContent, AnnouncementsResponse::class.java) as AnnouncementsResponse
-                            
-                            // 如果成功获取到公告数据，直接返回
-                            if (announcementsResponse.announcements.isNotEmpty()) {
-                                return@withContext Result.success(announcementsResponse.announcements)
-                            }
-                        } catch (e: Exception) {
-                            // JSON解析失败，继续使用备用方案
-                        }
-                    }
+                // 首先尝试从主 GitHub API 获取 JSON 文件
+                val mainApiResult = tryGetAnnouncementsFromJson(gitHubApiService, headers)
+                if (mainApiResult != null) {
+                    return@withContext Result.success(mainApiResult)
+                }
+                
+                // 如果主 API 失败，尝试备用 GitHub API
+                val backupApiResult = tryGetAnnouncementsFromJson(backupGitHubApiService, headers)
+                if (backupApiResult != null) {
+                    return@withContext Result.success(backupApiResult)
                 }
                 
                 // 备用方案：从GitHub Release和README获取公告
@@ -236,6 +222,47 @@ class ZeApiRepository {
                 )
             } else null
         } catch (e: Exception) {
+            null
+        }
+    }
+    
+    /**
+     * 尝试从指定的 GitHub API 服务获取公告 JSON 文件
+     * @param apiService GitHub API 服务实例（主服务或备用服务）
+     * @param headers 请求头
+     * @return 成功时返回公告列表，失败时返回 null
+     */
+    private suspend fun tryGetAnnouncementsFromJson(apiService: ApiService, headers: Map<String, String>): List<Announcement>? {
+        return try {
+            val jsonResponse = apiService.getAnnouncementsJson(headers)
+            if (jsonResponse.isSuccessful) {
+                val fileContent = jsonResponse.body()
+                fileContent?.let { content ->
+                    try {
+                        // 解码Base64内容
+                        val jsonContent = if (content.encoding == "base64") {
+                            String(Base64.decode(content.content.replace("\n", ""), Base64.DEFAULT))
+                        } else {
+                            content.content
+                        }
+                        
+                        // 解析JSON内容
+                        val gson = Gson()
+                        val announcementsResponse = gson.fromJson(jsonContent, AnnouncementsResponse::class.java) as AnnouncementsResponse
+                        
+                        // 如果成功获取到公告数据，返回结果
+                        if (announcementsResponse.announcements.isNotEmpty()) {
+                            return announcementsResponse.announcements
+                        }
+                    } catch (e: Exception) {
+                        // JSON解析失败
+                        return null
+                    }
+                }
+            }
+            null
+        } catch (e: Exception) {
+            // 网络请求失败
             null
         }
     }

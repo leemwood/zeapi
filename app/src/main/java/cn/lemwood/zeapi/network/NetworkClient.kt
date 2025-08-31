@@ -103,4 +103,17 @@ class NetworkClient {
         
         return retrofit.create(ApiService::class.java)
     }
+    
+    /**
+     * 创建备用 GitHub API 服务
+     */
+    fun createBackupGitHubApiService(): ApiService {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(Constants.GITHUB_API_BACKUP_URL)
+            .client(createOkHttpClient())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        
+        return retrofit.create(ApiService::class.java)
+    }
 }
