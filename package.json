@@ -2,16 +2,22 @@
   "name": "zeapi",
   "version": "1.0.0",
   "description": "ZeAPI - API工具应用",
-  "main": "main.js",
+  "main": "dist/main.js",
   "scripts": {
-    "start": "electron .",
-    "dev": "electron . --dev",
-    "build": "electron-builder",
-    "build:web": "node build.js",
+    "start": "npm run build:main && electron .",
+    "dev": "npm run build:main && electron . --dev",
+    "build": "npm run build:all && electron-builder",
+    "build:main": "tsc main.ts --outDir dist --target es2020 --module commonjs --esModuleInterop --allowSyntheticDefaultImports --skipLibCheck --noImplicitAny false --strict false",
+    "build:all": "npm run build:main && npm run build:web",
+    "build:web": "ts-node build.ts",
     "build:android": "npm run build:web && npm run sync:android && npx cap build android",
     "sync:android": "npx cap sync android",
     "open:android": "npx cap open android",
-    "dist": "electron-builder --publish=never"
+    "dist": "npm run build:all && electron-builder --publish=never",
+    "dist:win": "npm run build:all && electron-builder --win",
+    "dist:mac": "npm run build:all && electron-builder --mac",
+    "dist:linux": "npm run build:all && electron-builder --linux",
+    "dist:all": "npm run build:all && electron-builder --win --mac --linux"
   },
   "keywords": [
     "api",
@@ -25,8 +31,12 @@
     "@capacitor/android": "^7.4.3",
     "@capacitor/cli": "^7.4.3",
     "@capacitor/core": "^7.4.3",
-    "electron": "^28.0.0",
-    "electron-builder": "^24.9.1"
+    "@types/electron": "^1.4.38",
+    "@types/node": "^24.3.0",
+    "electron": "^28.3.3",
+    "electron-builder": "^24.9.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   },
   "optionalDependencies": {
     "dmg-license": "^1.0.11"
@@ -40,25 +50,129 @@
     "productName": "ZeAPI",
     "publish": false,
     "directories": {
-      "output": "dist"
+      "output": "release",
+      "buildResources": "assets"
     },
     "files": [
-      "**/*",
-      "!node_modules",
-      "!src",
-      "!.git"
+      "dist/**/*",
+      "index.html",
+      "renderer/**/*",
+      "assets/**/*",
+      "node_modules/**/*",
+      "!**/*.ts",
+      "!src/**/*",
+      "!.git/**/*",
+      "!.vscode/**/*",
+      "!*.md",
+      "!tsconfig.json"
+    ],
+    "compression": "maximum",
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/electron-store/**/*"
     ],
     "win": {
-      "target": "nsis",
-      "icon": "assets/icon.ico"
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "requestedExecutionLevel": "asInvoker",
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
     },
     "mac": {
-      "target": "dmg",
-      "icon": "assets/icon.icns"
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.icns",
+      "category": "public.app-category.developer-tools",
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "assets/entitlements.mac.plist",
+      "entitlementsInherit": "assets/entitlements.mac.plist"
     },
     "linux": {
-      "target": "AppImage",
-      "icon": "assets/icon.png"
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "rpm",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.png",
+      "category": "Development",
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
+      "desktop": {
+        "Name": "ZeAPI",
+        "Comment": "API工具应用",
+        "Categories": "Development;Network;"
+      }
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "ZeAPI"
+    },
+    "dmg": {
+      "title": "${productName} ${version}",
+      "backgroundColor": "#ffffff",
+      "window": {
+        "width": 540,
+        "height": 380
+      },
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
     }
   }
 }
