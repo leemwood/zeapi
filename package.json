@@ -35,6 +35,7 @@
   "build": {
     "appId": "cn.lemwood.zeapi",
     "productName": "ZeAPI",
+    "publish": false,
     "directories": {
       "output": "dist"
     },
