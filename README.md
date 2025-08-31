@@ -35,7 +35,7 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/your-username/zeapi.git
+git clone https://github.com/leemwood/zeapi.git
 cd zeapi
 
 # 安装依赖
