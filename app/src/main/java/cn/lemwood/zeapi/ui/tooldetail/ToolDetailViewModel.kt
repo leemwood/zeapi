@@ -92,7 +92,7 @@ class ToolDetailViewModel(application: Application) : AndroidViewModel(applicati
      */
     private fun extractToolIdFromUrl(url: String): String? {
         return try {
-            // 假设URL格式为 https://zeapi.link/tool/{id}
+            // 假设URL格式为 https://zeapi.ink/tool/{id}
             val segments = url.split("/")
             segments.lastOrNull()
         } catch (e: Exception) {
@@ -168,7 +168,7 @@ class ToolDetailViewModel(application: Application) : AndroidViewModel(applicati
                 name = "文本处理",
                 description = "提供各种文本处理功能，包括格式转换、编码解码、文本分析等多种实用功能",
                 category = "文本工具",
-                url = "https://zeapi.link/text",
+                url = "https://zeapi.ink/text",
                 isRecommended = true
             ),
             "2" to Tool(
@@ -176,7 +176,7 @@ class ToolDetailViewModel(application: Application) : AndroidViewModel(applicati
                 name = "图片处理",
                 description = "支持图片格式转换、压缩、裁剪、滤镜等多种图片处理功能",
                 category = "图片工具",
-                url = "https://zeapi.link/image",
+                url = "https://zeapi.ink/image",
                 isRecommended = true
             ),
             "3" to Tool(
@@ -184,7 +184,7 @@ class ToolDetailViewModel(application: Application) : AndroidViewModel(applicati
                 name = "网络工具",
                 description = "提供IP查询、网络测试、域名解析、端口扫描等网络相关工具",
                 category = "网络工具",
-                url = "https://zeapi.link/network",
+                url = "https://zeapi.ink/network",
                 isRecommended = true
             )
         )

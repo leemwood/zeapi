@@ -3,6 +3,8 @@ package cn.lemwood.zeapi.repository
 import android.util.Base64
 import cn.lemwood.zeapi.data.model.Announcement
 import cn.lemwood.zeapi.data.model.AnnouncementsResponse
+import cn.lemwood.zeapi.data.model.RecommendedTool
+import cn.lemwood.zeapi.data.model.RecommendedToolsResponse
 import cn.lemwood.zeapi.data.model.Tool
 import cn.lemwood.zeapi.network.ApiService
 import cn.lemwood.zeapi.network.NetworkClient
@@ -120,10 +122,24 @@ class ZeApiRepository {
     
     /**
      * 获取推荐工具
+     * 优先从GitHub仓库的recommended_tools.json文件获取，失败时使用API备用方案
      */
     suspend fun getRecommendedTools(headers: Map<String, String>): Result<List<Tool>> {
         return withContext(Dispatchers.IO) {
             try {
+                // 首先尝试从主 GitHub API 获取推荐工具 JSON 文件
+                val mainApiResult = tryGetRecommendedToolsFromJson(gitHubApiService, headers)
+                if (mainApiResult != null) {
+                    return@withContext Result.success(convertRecommendedToolsToTools(mainApiResult))
+                }
+                
+                // 如果主 API 失败，尝试备用 GitHub API
+                val backupApiResult = tryGetRecommendedToolsFromJson(backupGitHubApiService, headers)
+                if (backupApiResult != null) {
+                    return@withContext Result.success(convertRecommendedToolsToTools(backupApiResult))
+                }
+                
+                // 如果 GitHub API 都失败，使用 zeapi.link API 作为备用方案
                 val response = zeApiService.getRecommendedTools(headers)
                 if (response.isSuccessful) {
                     val toolsResponse = response.body()
@@ -264,6 +280,61 @@ class ZeApiRepository {
         } catch (e: Exception) {
             // 网络请求失败
             null
+        }
+    }
+    
+    /**
+     * 尝试从指定的GitHub API服务获取推荐工具JSON文件
+     */
+    private suspend fun tryGetRecommendedToolsFromJson(apiService: ApiService, headers: Map<String, String>): List<RecommendedTool>? {
+        return try {
+            val response = apiService.getRecommendedToolsJson(headers)
+            if (response.isSuccessful) {
+                val fileContent = response.body()
+                fileContent?.let { content ->
+                    try {
+                        // 解码Base64内容
+                        val jsonContent = if (content.encoding == "base64") {
+                            String(Base64.decode(content.content.replace("\n", ""), Base64.DEFAULT))
+                        } else {
+                            content.content
+                        }
+                        
+                        // 解析JSON内容
+                        val gson = Gson()
+                        val recommendedToolsResponse = gson.fromJson(jsonContent, RecommendedToolsResponse::class.java) as RecommendedToolsResponse
+                        
+                        // 如果成功获取到推荐工具数据，返回结果
+                        if (recommendedToolsResponse.recommendedTools.isNotEmpty()) {
+                            return recommendedToolsResponse.recommendedTools
+                        }
+                    } catch (e: Exception) {
+                        // JSON解析失败
+                        return null
+                    }
+                }
+            }
+            null
+        } catch (e: Exception) {
+            // 网络请求失败
+            null
+        }
+    }
+    
+    /**
+     * 将RecommendedTool列表转换为Tool列表
+     */
+    private fun convertRecommendedToolsToTools(recommendedTools: List<RecommendedTool>): List<Tool> {
+        return recommendedTools.map { recommendedTool ->
+            Tool(
+                id = recommendedTool.id,
+                name = recommendedTool.name,
+                description = recommendedTool.description,
+                category = recommendedTool.category,
+                url = recommendedTool.apiEndpoint,
+                icon = recommendedTool.icon,
+                isRecommended = recommendedTool.featured
+            )
         }
     }
 }

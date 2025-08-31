@@ -166,7 +166,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 name = "文本处理",
                 description = "提供各种文本处理功能",
                 category = "文本工具",
-                url = "https://zeapi.link/text",
+                url = "https://zeapi.ink/text",
                 isRecommended = true
             ),
             Tool(
@@ -174,7 +174,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 name = "图片处理",
                 description = "图片格式转换、压缩等",
                 category = "图片工具",
-                url = "https://zeapi.link/image",
+                url = "https://zeapi.ink/image",
                 isRecommended = true
             ),
             Tool(
@@ -182,7 +182,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 name = "网络工具",
                 description = "IP查询、网络测试等",
                 category = "网络工具",
-                url = "https://zeapi.link/network",
+                url = "https://zeapi.ink/network",
                 isRecommended = true
             ),
             Tool(
@@ -190,7 +190,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 name = "加密解密",
                 description = "各种加密解密算法",
                 category = "安全工具",
-                url = "https://zeapi.link/crypto",
+                url = "https://zeapi.ink/crypto",
                 isRecommended = true
             ),
             Tool(
@@ -198,7 +198,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 name = "JSON工具",
                 description = "JSON格式化、验证等",
                 category = "开发工具",
-                url = "https://zeapi.link/json",
+                url = "https://zeapi.ink/json",
                 isRecommended = true
             ),
             Tool(
@@ -206,7 +206,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 name = "二维码生成",
                 description = "生成各种类型的二维码",
                 category = "生成工具",
-                url = "https://zeapi.link/qrcode",
+                url = "https://zeapi.ink/qrcode",
                 isRecommended = true
             )
         )

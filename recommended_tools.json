@@ -1,0 +1,64 @@
+{
+  "recommended_tools": [
+    {
+      "id": "qrcode_generator",
+      "name": "二维码生成器",
+      "description": "快速生成各种类型的二维码",
+      "icon": "qr_code",
+      "category": "工具",
+      "api_endpoint": "/api/qrcode/generate",
+      "featured": true,
+      "order": 1
+    },
+    {
+      "id": "url_shortener",
+      "name": "短链接生成",
+      "description": "将长链接转换为短链接",
+      "icon": "link",
+      "category": "网络",
+      "api_endpoint": "/api/url/shorten",
+      "featured": true,
+      "order": 2
+    },
+    {
+      "id": "image_compress",
+      "name": "图片压缩",
+      "description": "在线压缩图片，减小文件大小",
+      "icon": "image",
+      "category": "图片",
+      "api_endpoint": "/api/image/compress",
+      "featured": true,
+      "order": 3
+    },
+    {
+      "id": "text_encrypt",
+      "name": "文本加密",
+      "description": "对文本进行加密和解密",
+      "icon": "lock",
+      "category": "安全",
+      "api_endpoint": "/api/text/encrypt",
+      "featured": false,
+      "order": 4
+    },
+    {
+      "id": "color_picker",
+      "name": "颜色选择器",
+      "description": "获取颜色代码和调色板",
+      "icon": "palette",
+      "category": "设计",
+      "api_endpoint": "/api/color/picker",
+      "featured": false,
+      "order": 5
+    },
+    {
+      "id": "json_formatter",
+      "name": "JSON格式化",
+      "description": "格式化和验证JSON数据",
+      "icon": "code",
+      "category": "开发",
+      "api_endpoint": "/api/json/format",
+      "featured": true,
+      "order": 6
+    }
+  ]
+}

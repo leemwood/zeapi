@@ -79,7 +79,7 @@ class NetworkClient {
     }
     
     /**
-     * 创建 zeapi.link API 服务
+     * 创建 zeapi.ink API 服务
      */
     fun createZeApiService(): ApiService {
         val retrofit = Retrofit.Builder()

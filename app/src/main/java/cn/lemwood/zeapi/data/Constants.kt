@@ -8,9 +8,9 @@ object Constants {
     // ========== API 地址 ==========
     
     /**
-     * zeapi.link 主站地址
+     * zeapi.ink 主站地址
      */
-    const val ZEAPI_BASE_URL = "https://zeapi.link/"
+    const val ZEAPI_BASE_URL = "https://zeapi.ink/"
     
     /**
      * GitHub API 基础地址

@@ -1,7 +1,7 @@
 package cn.lemwood.zeapi.utils
 
 object Constants {
-    const val BASE_URL = "https://zeapi.link/"
+    const val BASE_URL = "https://zeapi.ink/"
     const val GITHUB_API_URL = "https://api.github.com/"
     const val GITHUB_USER = "leemwood"
     const val GITHUB_REPO = "zeapi"

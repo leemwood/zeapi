@@ -10,7 +10,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
- * zeapi.link API 服务接口
+ * zeapi.ink API 服务接口
  */
 interface ApiService {
     
@@ -20,6 +20,13 @@ interface ApiService {
      */
     @GET("repos/leemwood/zeapi/contents/announcements.json")
     suspend fun getAnnouncementsJson(@HeaderMap headers: Map<String, String>): Response<GitHubFileContent>
+    
+    /**
+     * 获取GitHub仓库的推荐工具JSON文件
+     * 从仓库中的recommended_tools.json文件获取推荐工具信息
+     */
+    @GET("repos/leemwood/zeapi/contents/recommended_tools.json")
+    suspend fun getRecommendedToolsJson(@HeaderMap headers: Map<String, String>): Response<GitHubFileContent>
     
     /**
      * 获取GitHub仓库的公告信息（备用方案）
@@ -36,7 +43,7 @@ interface ApiService {
     
     /**
      * 获取工具列表
-     * 这里假设zeapi.link提供了工具列表的API端点
+     * 这里假设zeapi.ink提供了工具列表的API端点
      */
     @GET("api/tools")
     suspend fun getTools(

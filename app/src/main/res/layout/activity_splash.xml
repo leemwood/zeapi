@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="48dp"
-        android:text="基于zeapi.link的工具集合"
+        android:text="基于zeapi.ink的工具集合"
         android:textColor="@color/on_primary"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/progress_bar"

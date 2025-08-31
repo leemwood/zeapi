@@ -237,7 +237,7 @@ class ToolsViewModel(application: Application) : AndroidViewModel(application) {
                 name = "文本处理",
                 description = "提供各种文本处理功能，包括格式转换、编码解码等",
                 category = "文本工具",
-                url = "https://zeapi.link/text",
+                url = "https://zeapi.ink/text",
                 isRecommended = true
             ),
             Tool(
@@ -245,7 +245,7 @@ class ToolsViewModel(application: Application) : AndroidViewModel(application) {
                 name = "图片处理",
                 description = "图片格式转换、压缩、裁剪等功能",
                 category = "图片工具",
-                url = "https://zeapi.link/image",
+                url = "https://zeapi.ink/image",
                 isRecommended = true
             ),
             Tool(
@@ -253,7 +253,7 @@ class ToolsViewModel(application: Application) : AndroidViewModel(application) {
                 name = "网络工具",
                 description = "IP查询、网络测试、域名解析等",
                 category = "网络工具",
-                url = "https://zeapi.link/network",
+                url = "https://zeapi.ink/network",
                 isRecommended = true
             ),
             Tool(
@@ -261,49 +261,49 @@ class ToolsViewModel(application: Application) : AndroidViewModel(application) {
                 name = "加密解密",
                 description = "各种加密解密算法，哈希计算等",
                 category = "安全工具",
-                url = "https://zeapi.link/crypto"
+                url = "https://zeapi.ink/crypto"
             ),
             Tool(
                 id = "5",
                 name = "时间工具",
                 description = "时间戳转换、时区转换等时间相关工具",
                 category = "时间工具",
-                url = "https://zeapi.link/time"
+                url = "https://zeapi.ink/time"
             ),
             Tool(
                 id = "6",
                 name = "JSON工具",
                 description = "JSON格式化、验证、转换等功能",
                 category = "开发工具",
-                url = "https://zeapi.link/json"
+                url = "https://zeapi.ink/json"
             ),
             Tool(
                 id = "7",
                 name = "二维码生成",
                 description = "生成各种类型的二维码",
                 category = "生成工具",
-                url = "https://zeapi.link/qrcode"
+                url = "https://zeapi.ink/qrcode"
             ),
             Tool(
                 id = "8",
                 name = "颜色工具",
                 description = "颜色转换、调色板、颜色搭配等",
                 category = "设计工具",
-                url = "https://zeapi.link/color"
+                url = "https://zeapi.ink/color"
             ),
             Tool(
                 id = "9",
                 name = "Base64编解码",
                 description = "Base64编码和解码工具",
                 category = "编码工具",
-                url = "https://zeapi.link/base64"
+                url = "https://zeapi.ink/base64"
             ),
             Tool(
                 id = "10",
                 name = "URL编解码",
                 description = "URL编码和解码工具",
                 category = "编码工具",
-                url = "https://zeapi.link/url"
+                url = "https://zeapi.ink/url"
             )
         )
     }
