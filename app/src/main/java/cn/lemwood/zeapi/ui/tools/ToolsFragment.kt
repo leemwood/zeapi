@@ -47,7 +47,10 @@ class ToolsFragment : Fragment() {
         toolAdapter = ToolAdapter { tool ->
             // 跳转到本地工具详情页面
             val intent = android.content.Intent(requireContext(), LocalToolDetailActivity::class.java).apply {
-                 putExtra(LocalToolDetailActivity.EXTRA_TOOL_ID, tool.id)
+                putExtra(LocalToolDetailActivity.EXTRA_TOOL_ID, tool.id)
+                putExtra(LocalToolDetailActivity.EXTRA_TOOL_NAME, tool.name)
+                putExtra(LocalToolDetailActivity.EXTRA_TOOL_DESCRIPTION, tool.description)
+                putExtra(LocalToolDetailActivity.EXTRA_TOOL_CATEGORY, tool.category)
             }
             startActivity(intent)
         }

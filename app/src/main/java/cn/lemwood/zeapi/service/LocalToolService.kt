@@ -79,6 +79,41 @@ class LocalToolService {
      * @param day 日期（可选）
      */
     suspend fun getTodayInHistory(month: Int? = null, day: Int? = null): String {
+        return getTodayInHistoryInternal(month, day)
+    }
+    
+    /**
+     * 调用历史上的今天API
+     * @param dateParam 日期参数，格式：MM-DD
+     */
+    suspend fun getTodayInHistory(dateParam: String): String {
+        return if (dateParam.contains("-")) {
+            val parts = dateParam.split("-")
+            if (parts.size == 2) {
+                val month = parts[0].toIntOrNull()
+                val day = parts[1].toIntOrNull()
+                getTodayInHistoryInternal(month, day)
+            } else {
+                getTodayInHistoryInternal()
+            }
+        } else {
+            getTodayInHistoryInternal()
+        }
+    }
+    
+    /**
+     * 调用历史上的今天API（无参数版本）
+     */
+    suspend fun getTodayInHistory(): String {
+        return getTodayInHistoryInternal()
+    }
+    
+    /**
+     * 内部实现：调用历史上的今天API
+     * @param month 月份（可选）
+     * @param day 日期（可选）
+     */
+    private suspend fun getTodayInHistoryInternal(month: Int? = null, day: Int? = null): String {
         return withContext(Dispatchers.IO) {
             try {
                 val url = if (month != null && day != null) {
