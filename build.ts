@@ -152,6 +152,16 @@ class BuildManager {
         cwd: this.projectRoot
       });
       
+      // 编译 preload.ts 到 dist 目录
+      const preloadPath = path.join(this.projectRoot, 'preload.ts');
+      if (fs.existsSync(preloadPath)) {
+        console.log('🔨 编译 preload 脚本...');
+        execSync(`npx tsc preload.ts --outDir ${this.distDir} --target es2020 --module commonjs --esModuleInterop --allowSyntheticDefaultImports --skipLibCheck`, {
+          stdio: 'inherit',
+          cwd: this.projectRoot
+        });
+      }
+      
       console.log('✅ TypeScript编译完成');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -193,6 +203,25 @@ class BuildManager {
       
       if (fs.existsSync(assetsSrc)) {
         this.copyDirectory(assetsSrc, assetsDist);
+      }
+      
+      // 编译scripts目录下的TypeScript文件
+      const scriptsSrc = path.join(this.projectRoot, 'scripts');
+      const scriptsDist = path.join(this.distDir, 'scripts');
+      
+      if (fs.existsSync(scriptsSrc)) {
+        if (!fs.existsSync(scriptsDist)) {
+          fs.mkdirSync(scriptsDist, { recursive: true });
+        }
+        
+        // 编译scripts/main.ts
+        const mainTsPath = path.join(scriptsSrc, 'main.ts');
+        if (fs.existsSync(mainTsPath)) {
+          execSync(`tsc ${mainTsPath} --outDir ${scriptsDist} --target es2020 --module es2015 --esModuleInterop --allowSyntheticDefaultImports --skipLibCheck --moduleResolution node --noImplicitAny false --strict false`, {
+            cwd: this.projectRoot,
+            stdio: 'inherit'
+          });
+        }
       }
       
       console.log('✅ 前端资源构建完成');

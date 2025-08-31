@@ -31,7 +31,6 @@
     "@capacitor/android": "^7.4.3",
     "@capacitor/cli": "^7.4.3",
     "@capacitor/core": "^7.4.3",
-    "@types/electron": "^1.4.38",
     "@types/node": "^24.3.0",
     "electron": "^28.3.3",
     "electron-builder": "^24.9.1",
@@ -42,7 +41,7 @@
     "dmg-license": "^1.0.11"
   },
   "dependencies": {
-    "axios": "^1.6.0",
+    "axios": "^1.11.0",
     "electron-store": "^8.1.0"
   },
   "build": {

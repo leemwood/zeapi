@@ -1,5 +1,23 @@
-import { ipcRenderer } from 'electron';
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+
+// 类型声明
+declare global {
+  interface Window {
+    electronAPI: {
+      getAppVersion: () => Promise<string>;
+      getStoreValue: (key: string) => Promise<any>;
+      setStoreValue: (key: string, value: any) => Promise<boolean>;
+      showSaveDialog: (options: any) => Promise<any>;
+      showOpenDialog: (options: any) => Promise<any>;
+      minimize: () => void;
+      maximize: () => void;
+      close: () => void;
+    };
+  }
+}
+
+// 使用 preload 脚本暴露的安全 API
+const { electronAPI } = window;
 
 // 类型定义
 interface RequestParam {
@@ -758,12 +776,12 @@ function updateUI(): void {
 }
 
 function saveAppState(): void {
-    ipcRenderer.invoke('set-store-value', 'appState', appState);
+    electronAPI.setStoreValue('appState', appState);
 }
 
 async function loadStoredData(): Promise<void> {
     try {
-        const storedState = await ipcRenderer.invoke('get-store-value', 'appState');
+        const storedState = await electronAPI.getStoreValue('appState');
         if (storedState) {
             Object.assign(appState, storedState);
         }

@@ -9,6 +9,7 @@ dist/
 build/
 out/
 .tmp/
+release/
 
 # Electron
 app/

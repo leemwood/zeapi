@@ -32,10 +32,10 @@ function isDev(): boolean {
 function setupSecurityPolicy(): void {
   // 设置内容安全策略
   app.on('web-contents-created', (event, contents) => {
-    contents.on('new-window', (navigationEvent, navigationUrl) => {
+    contents.setWindowOpenHandler(({ url }) => {
       // 阻止新窗口打开，改为在默认浏览器中打开
-      navigationEvent.preventDefault();
-      require('electron').shell.openExternal(navigationUrl);
+      require('electron').shell.openExternal(url);
+      return { action: 'deny' };
     });
   });
 }
@@ -48,12 +48,12 @@ function createWindow(): void {
     minWidth: 800,
     minHeight: 600,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-      // enableRemoteModule: true, // 已弃用，使用contextBridge替代
-      webSecurity: false, // 允许跨域请求
-      allowRunningInsecureContent: true,
-      experimentalFeatures: true
+      nodeIntegration: false,
+      contextIsolation: true,
+      webSecurity: true,
+      allowRunningInsecureContent: false,
+      experimentalFeatures: false,
+      preload: path.join(__dirname, 'preload.js')
     },
     icon: getIconPath(),
     show: false,
