@@ -12,7 +12,6 @@ out/
 
 # Electron
 app/
-package-lock.json
 yarn.lock
 
 # IDE
