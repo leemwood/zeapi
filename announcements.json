@@ -7,22 +7,6 @@
       "date": "2025-09-01",
       "author": "柠枺",
       "isImportant": true
-    },
-    {
-      "id": "feature_update_202501",
-      "title": "功能更新通知",
-      "content": "本次更新优化了工具搜索功能，提升了应用性能，并修复了已知问题。感谢您的使用和反馈！",
-      "date": "2025-01-15",
-      "author": "柠枺",
-      "isImportant": false
-    },
-    {
-      "id": "maintenance_notice",
-      "title": "服务维护通知",
-      "content": "为了提供更好的服务体验，我们将在每周日凌晨 2:00-4:00 进行系统维护，期间可能会影响部分功能的使用。",
-      "date": "2025-01-10",
-      "author": "柠枺",
-      "isImportant": false
     }
   ]
 }
