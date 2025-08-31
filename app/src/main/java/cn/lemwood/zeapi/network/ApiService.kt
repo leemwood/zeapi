@@ -14,7 +14,14 @@ import retrofit2.http.Query
 interface ApiService {
     
     /**
-     * 获取GitHub仓库的公告信息
+     * 获取GitHub仓库的公告JSON文件
+     * 从仓库中的announcements.json文件获取公告信息
+     */
+    @GET("repos/leemwood/zeapi/contents/announcements.json")
+    suspend fun getAnnouncementsJson(@HeaderMap headers: Map<String, String>): Response<GitHubFileContent>
+    
+    /**
+     * 获取GitHub仓库的公告信息（备用方案）
      * 通过GitHub API获取仓库的README或releases信息
      */
     @GET("repos/leemwood/zeapi/releases/latest")

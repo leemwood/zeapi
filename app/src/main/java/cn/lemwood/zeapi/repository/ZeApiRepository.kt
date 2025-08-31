@@ -2,9 +2,11 @@ package cn.lemwood.zeapi.repository
 
 import android.util.Base64
 import cn.lemwood.zeapi.data.model.Announcement
+import cn.lemwood.zeapi.data.model.AnnouncementsResponse
 import cn.lemwood.zeapi.data.model.Tool
 import cn.lemwood.zeapi.network.ApiService
 import cn.lemwood.zeapi.network.NetworkClient
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
@@ -28,14 +30,43 @@ class ZeApiRepository {
     
     /**
      * 获取GitHub公告
+     * 优先从仓库的announcements.json文件获取，失败时使用备用方案
      */
     suspend fun getAnnouncements(headers: Map<String, String>): Result<List<Announcement>> {
         return withContext(Dispatchers.IO) {
             try {
-                // 首先尝试获取最新发布信息
-                val releaseResponse = gitHubApiService.getLatestRelease(headers)
+                // 首先尝试从仓库的JSON文件获取公告
+                val jsonResponse = gitHubApiService.getAnnouncementsJson(headers)
+                if (jsonResponse.isSuccessful) {
+                    val fileContent = jsonResponse.body()
+                    fileContent?.let {
+                        try {
+                            // 解码Base64内容
+                            val jsonContent = if (it.encoding == "base64") {
+                                String(Base64.decode(it.content.replace("\n", ""), Base64.DEFAULT))
+                            } else {
+                                it.content
+                            }
+                            
+                            // 解析JSON内容
+                            val gson = Gson()
+                            val announcementsResponse = gson.fromJson(jsonContent, AnnouncementsResponse::class.java)
+                            
+                            // 如果成功获取到公告数据，直接返回
+                            if (announcementsResponse.announcements.isNotEmpty()) {
+                                return@withContext Result.success(announcementsResponse.announcements)
+                            }
+                        } catch (e: Exception) {
+                            // JSON解析失败，继续使用备用方案
+                        }
+                    }
+                }
+                
+                // 备用方案：从GitHub Release和README获取公告
                 val announcements = mutableListOf<Announcement>()
                 
+                // 尝试获取最新发布信息
+                val releaseResponse = gitHubApiService.getLatestRelease(headers)
                 if (releaseResponse.isSuccessful) {
                     val release = releaseResponse.body()
                     release?.let {
