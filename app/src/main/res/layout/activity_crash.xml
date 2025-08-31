@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background"
+    android:padding="@dimen/padding_large">
+
+    <!-- 顶部图标和标题区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/margin_large">
+
+        <!-- 错误图标 -->
+        <ImageView
+            android:layout_width="@dimen/icon_large"
+            android:layout_height="@dimen/icon_large"
+            android:src="@drawable/ic_error"
+            android:tint="@color/error"
+            android:layout_marginBottom="@dimen/margin_medium" />
+
+        <!-- 标题 -->
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="应用崩溃"
+            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:layout_marginBottom="@dimen/margin_small" />
+
+        <!-- 副标题 -->
+        <TextView
+            android:id="@+id/tv_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="很抱歉，应用遇到了意外错误"
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/text_secondary"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <!-- 崩溃日志区域 -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="@dimen/margin_large"
+        app:cardCornerRadius="@dimen/corner_radius_medium"
+        app:cardElevation="@dimen/elevation_small"
+        app:cardBackgroundColor="@color/surface">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_medium">
+
+            <!-- 日志标题 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="错误详情"
+                android:textSize="@dimen/text_size_medium"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/margin_small" />
+
+            <!-- 日志内容 -->
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical">
+
+                <TextView
+                    android:id="@+id/tv_crash_log"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="加载中..."
+                    android:textSize="@dimen/text_size_small"
+                    android:textColor="@color/text_secondary"
+                    android:fontFamily="monospace"
+                    android:textIsSelectable="true"
+                    android:padding="@dimen/padding_small"
+                    android:background="@drawable/rounded_background"
+                    android:backgroundTint="@color/background" />
+
+            </ScrollView>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- 操作按钮区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- 复制日志按钮 -->
+        <Button
+            android:id="@+id/btn_copy_log"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:text="复制错误日志"
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/white"
+            android:background="@drawable/button_primary"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:drawableStart="@drawable/ic_copy"
+            android:drawablePadding="@dimen/padding_small"
+            android:drawableTint="@color/white"
+            android:gravity="center" />
+
+        <!-- 按钮行 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <!-- 重启应用按钮 -->
+            <Button
+                android:id="@+id/btn_restart"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_weight="1"
+                android:text="重启应用"
+                android:textSize="@dimen/text_size_medium"
+                android:textColor="@color/primary"
+                android:background="@drawable/button_outline"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:drawableStart="@drawable/ic_restart"
+                android:drawablePadding="@dimen/padding_small"
+                android:drawableTint="@color/primary"
+                android:gravity="center" />
+
+            <!-- 退出应用按钮 -->
+            <Button
+                android:id="@+id/btn_exit"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_weight="1"
+                android:text="退出应用"
+                android:textSize="@dimen/text_size_medium"
+                android:textColor="@color/text_secondary"
+                android:background="@drawable/button_outline"
+                android:layout_marginStart="@dimen/margin_small"
+                android:drawableStart="@drawable/ic_exit"
+                android:drawablePadding="@dimen/padding_small"
+                android:drawableTint="@color/text_secondary"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

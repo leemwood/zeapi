@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 基础间距 -->
+    <dimen name="margin_tiny">2dp</dimen>
     <dimen name="margin_extra_small">4dp</dimen>
     <dimen name="margin_small">8dp</dimen>
     <dimen name="margin_medium">16dp</dimen>
@@ -43,13 +44,17 @@
     <dimen name="icon_size_medium">32dp</dimen>
     <dimen name="icon_size_large">48dp</dimen>
     <dimen name="icon_size_extra_large">64dp</dimen>
+    <dimen name="icon_large">48dp</dimen>
     
     <!-- 文本大小 -->
     <dimen name="text_size_caption">12sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
     <dimen name="text_size_body_small">14sp</dimen>
+    <dimen name="text_size_medium">16sp</dimen>
     <dimen name="text_size_body">16sp</dimen>
     <dimen name="text_size_subtitle">18sp</dimen>
     <dimen name="text_size_title">20sp</dimen>
+    <dimen name="text_size_large">20sp</dimen>
     <dimen name="text_size_headline">24sp</dimen>
     <dimen name="text_size_button">14sp</dimen>
     
@@ -77,6 +82,7 @@
     <dimen name="elevation_fab">6dp</dimen>
     <dimen name="elevation_toolbar">4dp</dimen>
     <dimen name="elevation_bottom_nav">8dp</dimen>
+    <dimen name="elevation_small">2dp</dimen>
     
     <!-- 进度指示器 -->
     <dimen name="progress_size">48dp</dimen>
