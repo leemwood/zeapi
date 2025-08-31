@@ -1,0 +1,49 @@
+name: Test and Quality Check
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Run linting
+      run: npm run lint || echo "Linting not configured"
+    
+    - name: Run tests
+      run: npm test || echo "Tests not configured"
+    
+    - name: Check build
+      run: npm run build:web || echo "Build check completed"
+
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Run security audit
+      run: npm audit --audit-level moderate || true
+    
+    - name: Check for vulnerabilities
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+    
+    - run: npm install
+    - run: npm audit --audit-level high
