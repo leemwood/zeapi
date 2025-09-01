@@ -1,18 +1,25 @@
 package cn.lemwood.zeapi.ui
 
+import android.Manifest
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.ContentValues
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Base64
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import cn.lemwood.zeapi.R
 import cn.lemwood.zeapi.databinding.ActivityLocalToolDetailBinding
@@ -31,6 +38,19 @@ class LocalToolDetailActivity : AppCompatActivity() {
     private var toolDescription: String = ""
     private var toolCategory: String = ""
     private var currentQRCodeData: String = "" // 存储当前生成的二维码Base64数据
+    
+    // 权限请求启动器
+    private val permissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val allGranted = permissions.values.all { it }
+        if (allGranted) {
+            // 权限已授予，执行下载
+            performDownload()
+        } else {
+            showPermissionDeniedDialog()
+        }
+    }
 
     companion object {
         const val EXTRA_TOOL_ID = "tool_id"
@@ -337,15 +357,36 @@ class LocalToolDetailActivity : AppCompatActivity() {
             return
         }
         
+        // 检查权限
+        val requiredPermissions = getRequiredPermissions()
+        val missingPermissions = requiredPermissions.filter {
+            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }
+        
+        if (missingPermissions.isNotEmpty()) {
+            // 请求权限
+            permissionLauncher.launch(missingPermissions.toTypedArray())
+        } else {
+            // 权限已授予，直接下载
+            performDownload()
+        }
+    }
+    
+    private fun performDownload() {
         try {
+            Log.d("LocalToolDetail", "开始下载二维码，数据长度: ${currentQRCodeData.length}")
+            
             // 解码Base64数据
             val imageBytes = Base64.decode(currentQRCodeData, Base64.DEFAULT)
             val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
             
             if (bitmap == null) {
+                Log.e("LocalToolDetail", "图片数据解析失败")
                 Toast.makeText(this, "图片数据解析失败", Toast.LENGTH_SHORT).show()
                 return
             }
+            
+            Log.d("LocalToolDetail", "图片解析成功，尺寸: ${bitmap.width}x${bitmap.height}")
             
             // 生成文件名
             val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
@@ -355,21 +396,50 @@ class LocalToolDetailActivity : AppCompatActivity() {
             val contentValues = ContentValues().apply {
                 put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
                 put(MediaStore.Images.Media.MIME_TYPE, "image/png")
-                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/ZeAPI")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/ZeAPI")
+                    put(MediaStore.Images.Media.IS_PENDING, 1) // 标记为待处理状态
+                }
             }
+            
+            Log.d("LocalToolDetail", "准备插入MediaStore，文件名: $fileName，Android版本: ${Build.VERSION.SDK_INT}")
             
             val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
             
             if (uri != null) {
+                Log.d("LocalToolDetail", "MediaStore URI创建成功: $uri")
+                
+                var success = false
                 contentResolver.openOutputStream(uri)?.use { outputStream ->
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                    success = bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                    Log.d("LocalToolDetail", "图片压缩结果: $success")
                 }
-                Toast.makeText(this, "二维码已保存到相册", Toast.LENGTH_SHORT).show()
+                
+                if (success) {
+                    // Android 10+ 需要清除IS_PENDING标记
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        val updateValues = ContentValues().apply {
+                            put(MediaStore.Images.Media.IS_PENDING, 0)
+                        }
+                        contentResolver.update(uri, updateValues, null, null)
+                        Log.d("LocalToolDetail", "清除IS_PENDING标记")
+                    }
+                    
+                    Toast.makeText(this, "二维码已保存到相册", Toast.LENGTH_SHORT).show()
+                    Log.d("LocalToolDetail", "二维码保存成功")
+                } else {
+                    Log.e("LocalToolDetail", "图片压缩失败")
+                    Toast.makeText(this, "保存失败：图片压缩失败", Toast.LENGTH_SHORT).show()
+                    // 删除失败的文件
+                    contentResolver.delete(uri, null, null)
+                }
             } else {
-                Toast.makeText(this, "保存失败", Toast.LENGTH_SHORT).show()
+                Log.e("LocalToolDetail", "MediaStore URI创建失败")
+                Toast.makeText(this, "保存失败：无法创建文件", Toast.LENGTH_SHORT).show()
             }
             
         } catch (e: Exception) {
+            Log.e("LocalToolDetail", "下载失败", e)
             Toast.makeText(this, "下载失败：${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
@@ -378,5 +448,30 @@ class LocalToolDetailActivity : AppCompatActivity() {
         binding.resultText.text = "暂无结果"
         currentQRCodeData = "" // 清空二维码数据
         Toast.makeText(this, "结果已清空", Toast.LENGTH_SHORT).show()
+    }
+    
+    private fun getRequiredPermissions(): List<String> {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13+ 使用新的媒体权限
+            listOf(
+                Manifest.permission.READ_MEDIA_IMAGES
+            )
+        } else {
+            // Android 12 及以下使用传统存储权限
+            listOf(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+        }
+    }
+    
+    private fun showPermissionDeniedDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("权限需要")
+            .setMessage("为了保存二维码到相册，需要存储权限。请在设置中手动授予权限。")
+            .setPositiveButton("确定") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }
