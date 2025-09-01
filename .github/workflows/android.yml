@@ -32,16 +32,8 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Debug environment
-      run: |
-        echo "Current directory: $(pwd)"
-        echo "GRADLE_USER_HOME: $GRADLE_USER_HOME"
-        echo "CLASSPATH: $CLASSPATH"
-        ls -la
-        cat settings.gradle
-        
     - name: Run tests
-      run: ./gradlew test --stacktrace --info
+      run: ./gradlew test
 
     - name: Build with Gradle
       run: ./gradlew assembleDebug
