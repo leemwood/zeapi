@@ -130,8 +130,7 @@
                                 android:id="@+id/monthInput"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="number"
-                                android:maxLength="2"
+                                android:inputType="textMultiLine"
                                 android:visibility="visible" />
 
                         </com.google.android.material.textfield.TextInputLayout>
@@ -149,7 +148,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:inputType="number"
-                                android:maxLength="2"
                                 android:visibility="visible" />
 
                         </com.google.android.material.textfield.TextInputLayout>
