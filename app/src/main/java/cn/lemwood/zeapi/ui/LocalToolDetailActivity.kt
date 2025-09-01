@@ -8,10 +8,12 @@ import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.provider.Settings
 import android.util.Base64
 import android.util.Log
 import android.view.View
@@ -321,10 +323,16 @@ class LocalToolDetailActivity : AppCompatActivity() {
                             // 保存二维码数据供下载使用
                             currentQRCodeData = imageData
                             Log.d("LocalToolDetail", "二维码数据已保存，长度: ${imageData.length}，前50字符: ${imageData.take(50)}")
+                            
+                            // 显示二维码图片
+                            displayQRCodeImage(imageData)
+                            
                             result.append("✅ 二维码已生成\n")
                             result.append("💡 提示：点击下载按钮保存图片到相册")
                         } else {
                             currentQRCodeData = ""
+                            // 隐藏二维码图片
+                            binding.qrCodeImage.visibility = View.GONE
                             Log.w("LocalToolDetail", "API返回的图片数据为空")
                             result.append("❌ 图片数据为空")
                         }
@@ -489,8 +497,32 @@ class LocalToolDetailActivity : AppCompatActivity() {
     
     private fun clearResult() {
         binding.resultText.text = "暂无结果"
+        binding.qrCodeImage.visibility = View.GONE
         currentQRCodeData = "" // 清空二维码数据
         Toast.makeText(this, "结果已清空", Toast.LENGTH_SHORT).show()
+    }
+    
+    /**
+     * 显示二维码图片
+     */
+    private fun displayQRCodeImage(base64Data: String) {
+        try {
+            // 解码Base64数据
+            val imageBytes = Base64.decode(base64Data, Base64.DEFAULT)
+            val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+            
+            if (bitmap != null) {
+                binding.qrCodeImage.setImageBitmap(bitmap)
+                binding.qrCodeImage.visibility = View.VISIBLE
+                Log.d("LocalToolDetail", "二维码图片显示成功")
+            } else {
+                binding.qrCodeImage.visibility = View.GONE
+                Log.e("LocalToolDetail", "无法解码二维码图片")
+            }
+        } catch (e: Exception) {
+            binding.qrCodeImage.visibility = View.GONE
+            Log.e("LocalToolDetail", "显示二维码图片失败: ${e.message}")
+        }
     }
     
     private fun getRequiredPermissions(): List<String> {
