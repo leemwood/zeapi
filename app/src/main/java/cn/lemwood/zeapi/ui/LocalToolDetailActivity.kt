@@ -394,11 +394,15 @@ class LocalToolDetailActivity : AppCompatActivity() {
                 return
             }
             
+            // 清理Base64数据
+            val cleanBase64 = cleanBase64Data(currentQRCodeData)
+            Log.d("LocalToolDetail", "清理后的Base64数据长度: ${cleanBase64.length}")
+            
             // 解码Base64数据
             val imageBytes = try {
-                Base64.decode(currentQRCodeData, Base64.DEFAULT)
+                Base64.decode(cleanBase64, Base64.DEFAULT)
             } catch (e: IllegalArgumentException) {
-                Log.e("LocalToolDetail", "Base64解码失败", e)
+                Log.e("LocalToolDetail", "Base64解码失败: ${e.message}")
                 Toast.makeText(this, "错误：二维码数据格式无效", Toast.LENGTH_SHORT).show()
                 return
             }
@@ -503,22 +507,43 @@ class LocalToolDetailActivity : AppCompatActivity() {
     }
     
     /**
+     * 清理Base64数据，去除数据URL前缀和空白字符
+     */
+    private fun cleanBase64Data(base64Data: String): String {
+        return base64Data.let { data ->
+            when {
+                data.startsWith("data:image/") -> {
+                    val commaIndex = data.indexOf(",")
+                    if (commaIndex != -1) data.substring(commaIndex + 1) else data
+                }
+                else -> data
+            }
+        }.replace("\n", "").replace("\r", "").replace(" ", "")
+    }
+
+    /**
      * 显示二维码图片
      */
     private fun displayQRCodeImage(base64Data: String) {
         try {
+            val cleanBase64 = cleanBase64Data(base64Data)
+            Log.d("LocalToolDetail", "处理后的Base64数据长度: ${cleanBase64.length}，前50字符: ${cleanBase64.take(50)}")
+            
             // 解码Base64数据
-            val imageBytes = Base64.decode(base64Data, Base64.DEFAULT)
+            val imageBytes = Base64.decode(cleanBase64, Base64.DEFAULT)
             val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
             
             if (bitmap != null) {
                 binding.qrCodeImage.setImageBitmap(bitmap)
                 binding.qrCodeImage.visibility = View.VISIBLE
-                Log.d("LocalToolDetail", "二维码图片显示成功")
+                Log.d("LocalToolDetail", "二维码图片显示成功，尺寸: ${bitmap.width}x${bitmap.height}")
             } else {
                 binding.qrCodeImage.visibility = View.GONE
-                Log.e("LocalToolDetail", "无法解码二维码图片")
+                Log.e("LocalToolDetail", "无法解码二维码图片，图片数据可能损坏")
             }
+        } catch (e: IllegalArgumentException) {
+            binding.qrCodeImage.visibility = View.GONE
+            Log.e("LocalToolDetail", "Base64解码失败: ${e.message}")
         } catch (e: Exception) {
             binding.qrCodeImage.visibility = View.GONE
             Log.e("LocalToolDetail", "显示二维码图片失败: ${e.message}")
