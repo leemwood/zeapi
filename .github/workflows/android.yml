@@ -33,10 +33,10 @@ jobs:
       run: chmod +x gradlew
 
     - name: Run tests
-      run: ./gradlew test
+      run: ./gradlew test --settings-file settings.gradle
 
     - name: Build with Gradle
-      run: ./gradlew assembleDebug
+      run: ./gradlew assembleDebug --settings-file settings.gradle
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
@@ -70,7 +70,7 @@ jobs:
       run: chmod +x gradlew
     
     - name: Run lint
-      run: ./gradlew lintDebug
+      run: ./gradlew lintDebug --settings-file settings.gradle
     
     - name: Upload lint results
       uses: actions/upload-artifact@v4
