@@ -221,6 +221,16 @@
                             style="@style/Widget.MaterialComponents.Button.TextButton" />
 
                         <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDownload"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/spacing_xs"
+                            android:text="下载"
+                            android:textSize="@dimen/text_size_small"
+                            android:visibility="gone"
+                            style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnClear"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

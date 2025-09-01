@@ -3,7 +3,13 @@ package cn.lemwood.zeapi.ui
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.ContentValues
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Base64
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +19,9 @@ import cn.lemwood.zeapi.databinding.ActivityLocalToolDetailBinding
 import cn.lemwood.zeapi.service.LocalToolService
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 class LocalToolDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLocalToolDetailBinding
@@ -21,6 +30,7 @@ class LocalToolDetailActivity : AppCompatActivity() {
     private var toolName: String = ""
     private var toolDescription: String = ""
     private var toolCategory: String = ""
+    private var currentQRCodeData: String = "" // 存储当前生成的二维码Base64数据
 
     companion object {
         const val EXTRA_TOOL_ID = "tool_id"
@@ -34,7 +44,7 @@ class LocalToolDetailActivity : AppCompatActivity() {
         binding = ActivityLocalToolDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        localToolService = LocalToolService()
+        localToolService = LocalToolService(this)
 
         // 获取传递的工具信息
         toolId = intent.getStringExtra(EXTRA_TOOL_ID) ?: ""
@@ -55,6 +65,7 @@ class LocalToolDetailActivity : AppCompatActivity() {
         when (toolId) {
             "today_in_history" -> setupTodayInHistoryUI()
             "random_quote" -> setupRandomQuoteUI()
+            "qrcode_generator" -> setupQRCodeGeneratorUI()
             else -> {
                 binding.parameterContainer.visibility = View.GONE
             }
@@ -70,6 +81,10 @@ class LocalToolDetailActivity : AppCompatActivity() {
             copyResult()
         }
 
+        binding.btnDownload.setOnClickListener {
+            downloadQRCode()
+        }
+
         binding.btnClear.setOnClickListener {
             clearResult()
         }
@@ -79,6 +94,9 @@ class LocalToolDetailActivity : AppCompatActivity() {
         binding.parameterContainer.visibility = View.VISIBLE
         binding.parameterTitle.text = "日期参数（可选）"
         binding.parameterDescription.text = "格式：MM-DD，如：09-01，留空则使用今天"
+        
+        // 隐藏下载按钮
+        binding.btnDownload.visibility = View.GONE
         
         // 显示月份和日期输入框
         binding.monthInputLayout.visibility = View.VISIBLE
@@ -98,11 +116,36 @@ class LocalToolDetailActivity : AppCompatActivity() {
         // 随机一言不需要任何参数，隐藏整个参数容器
         binding.parameterContainer.visibility = View.GONE
         
+        // 隐藏下载按钮
+        binding.btnDownload.visibility = View.GONE
+        
         // 隐藏月份和日期输入框
         binding.monthInputLayout.visibility = View.GONE
         binding.dayInputLayout.visibility = View.GONE
         binding.monthInput.visibility = View.GONE
         binding.dayInput.visibility = View.GONE
+    }
+    
+    private fun setupQRCodeGeneratorUI() {
+        binding.parameterContainer.visibility = View.VISIBLE
+        binding.parameterTitle.text = "二维码参数"
+        binding.parameterDescription.text = "输入要生成二维码的文本内容，可选择尺寸和格式"
+        
+        // 显示下载按钮
+        binding.btnDownload.visibility = View.VISIBLE
+        
+        // 显示月份和日期输入框，但重新定义用途
+        binding.monthInputLayout.visibility = View.VISIBLE
+        binding.dayInputLayout.visibility = View.VISIBLE
+        binding.monthInput.visibility = View.VISIBLE
+        binding.dayInput.visibility = View.VISIBLE
+        
+        // 重新定义输入框用途
+        binding.monthInputLayout.hint = "文本内容"
+        binding.dayInputLayout.hint = "尺寸(像素)"
+        
+        binding.monthInput.setText("") // 文本内容
+        binding.dayInput.setText("200") // 默认尺寸200px
     }
 
     private fun executeTool() {
@@ -128,6 +171,15 @@ class LocalToolDetailActivity : AppCompatActivity() {
                     "random_quote" -> {
                         localToolService.getRandomQuote()
                     }
+                    "qrcode_generator" -> {
+                        val text = monthParam // 使用monthInput作为文本输入
+                        val size = dayParam.toIntOrNull() ?: 200 // 使用dayInput作为尺寸输入
+                        if (text.isEmpty()) {
+                            "请输入要生成二维码的文本内容"
+                        } else {
+                            localToolService.generateQRCode(text, size, 4, "jpg")
+                        }
+                    }
                     else -> "不支持的工具类型"
                 }
                 
@@ -149,6 +201,7 @@ class LocalToolDetailActivity : AppCompatActivity() {
             when (toolId) {
                 "today_in_history" -> formatTodayInHistoryResult(jsonResult)
                 "random_quote" -> formatRandomQuoteResult(jsonResult)
+                "qrcode_generator" -> formatQRCodeResult(jsonResult)
                 else -> jsonResult
             }
         } catch (e: Exception) {
@@ -215,6 +268,56 @@ class LocalToolDetailActivity : AppCompatActivity() {
             "❌ 格式化失败：${e.message}\n\n原始数据：\n$jsonResult"
         }
     }
+    
+    private fun formatQRCodeResult(jsonResult: String): String {
+        return try {
+            // 检查是否是错误信息
+            if (jsonResult.startsWith("请求失败") || jsonResult.startsWith("网络请求失败") || jsonResult.startsWith("请输入要生成")) {
+                "❌ $jsonResult"
+            } else if (jsonResult == "生成二维码失败") {
+                "❌ $jsonResult"
+            } else {
+                // 尝试解析JSON响应
+                val jsonObject = JSONObject(jsonResult)
+                val status = jsonObject.optString("status", "")
+                
+                if (status == "success") {
+                    val data = jsonObject.optJSONObject("data")
+                    if (data != null) {
+                        val text = data.optString("text", "")
+                        val size = data.optInt("size", 0)
+                        val format = data.optString("format", "")
+                        val imageData = data.optString("image", "")
+                        
+                        val result = StringBuilder()
+                        result.append("📱 二维码生成成功\n\n")
+                        result.append("文本内容：$text\n")
+                        result.append("图片尺寸：${size}x${size}px\n")
+                        result.append("图片格式：$format\n\n")
+                        
+                        if (imageData.isNotEmpty()) {
+                            // 保存二维码数据供下载使用
+                            currentQRCodeData = imageData
+                            result.append("✅ 二维码已生成\n")
+                            result.append("💡 提示：点击下载按钮保存图片到相册")
+                        } else {
+                            currentQRCodeData = ""
+                            result.append("❌ 图片数据为空")
+                        }
+                        
+                        result.toString()
+                    } else {
+                        "❌ 响应数据格式错误"
+                    }
+                } else {
+                    val message = jsonObject.optString("message", "未知错误")
+                    "❌ $message"
+                }
+            }
+        } catch (e: Exception) {
+            "❌ 格式化失败：${e.message}\n\n原始数据：\n$jsonResult"
+        }
+    }
 
     private fun copyResult() {
         val result = binding.resultText.text.toString()
@@ -228,8 +331,52 @@ class LocalToolDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun downloadQRCode() {
+        if (currentQRCodeData.isEmpty()) {
+            Toast.makeText(this, "没有可下载的二维码图片", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        try {
+            // 解码Base64数据
+            val imageBytes = Base64.decode(currentQRCodeData, Base64.DEFAULT)
+            val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+            
+            if (bitmap == null) {
+                Toast.makeText(this, "图片数据解析失败", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
+            // 生成文件名
+            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+            val fileName = "QRCode_$timeStamp.png"
+            
+            // 保存到相册
+            val contentValues = ContentValues().apply {
+                put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
+                put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/ZeAPI")
+            }
+            
+            val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            
+            if (uri != null) {
+                contentResolver.openOutputStream(uri)?.use { outputStream ->
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                }
+                Toast.makeText(this, "二维码已保存到相册", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "保存失败", Toast.LENGTH_SHORT).show()
+            }
+            
+        } catch (e: Exception) {
+            Toast.makeText(this, "下载失败：${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+    
     private fun clearResult() {
         binding.resultText.text = "暂无结果"
+        currentQRCodeData = "" // 清空二维码数据
         Toast.makeText(this, "结果已清空", Toast.LENGTH_SHORT).show()
     }
 }

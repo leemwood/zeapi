@@ -14,7 +14,7 @@ import kotlinx.coroutines.async
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = LocalZeApiRepository()
+    private val repository = LocalZeApiRepository(application.applicationContext)
     private val sharedPreferencesManager = SharedPreferencesManager(application)
     
     private val _announcements = MutableLiveData<List<Announcement>>()

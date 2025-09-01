@@ -16,12 +16,12 @@ import java.util.*
  * 本地zeapi数据仓库
  * 使用本地硬编码的工具，只保留GitHub公告获取功能
  */
-class LocalZeApiRepository {
+class LocalZeApiRepository(private val context: android.content.Context) {
     
     private val networkClient = NetworkClient.getInstance()
     private val gitHubApiService: ApiService by lazy { networkClient.createGitHubApiService() }
     private val backupGitHubApiService: ApiService by lazy { networkClient.createBackupGitHubApiService() }
-    private val localToolService = LocalToolService()
+    private val localToolService = LocalToolService(context)
     
     /**
      * 更新请求头

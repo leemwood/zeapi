@@ -1,22 +1,21 @@
 package cn.lemwood.zeapi.service
 
+import android.content.Context
+import cn.lemwood.zeapi.data.local.TodayInHistoryTool
+import cn.lemwood.zeapi.data.local.RandomQuoteTool
+import cn.lemwood.zeapi.data.local.QRCodeGeneratorTool
 import cn.lemwood.zeapi.data.model.Tool
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.json.JSONArray
-import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * 本地工具服务类
- * 硬编码实现工具功能，直接调用zeapi.ink的API
+ * 使用独立的工具类实现各种功能，支持请求头配置
  */
-class LocalToolService {
+class LocalToolService(private val context: Context) {
     
-    private val httpClient = OkHttpClient()
+    // 工具类实例
+    private val todayInHistoryTool = TodayInHistoryTool(context)
+    private val randomQuoteTool = RandomQuoteTool(context)
+    private val qrCodeGeneratorTool = QRCodeGeneratorTool(context)
     
     companion object {
         // 硬编码的工具列表
@@ -37,6 +36,15 @@ class LocalToolService {
                 category = "文学",
                 url = "https://zeapi.ink/v1/onesay.php",
                 icon = "💬",
+                isRecommended = true
+            ),
+            Tool(
+                id = "qrcode_generator",
+                name = "二维码生成",
+                description = "生成二维码图片，支持自定义尺寸和格式",
+                category = "工具",
+                url = "https://zeapi.ink/v1/qrcode.php",
+                icon = "📱",
                 isRecommended = true
             )
         )
@@ -79,7 +87,7 @@ class LocalToolService {
      * @param day 日期（可选）
      */
     suspend fun getTodayInHistory(month: Int? = null, day: Int? = null): String {
-        return getTodayInHistoryInternal(month, day)
+        return todayInHistoryTool.getTodayInHistory(month, day)
     }
     
     /**
@@ -87,102 +95,37 @@ class LocalToolService {
      * @param dateParam 日期参数，格式：MM-DD
      */
     suspend fun getTodayInHistory(dateParam: String): String {
-        return if (dateParam.contains("-")) {
-            val parts = dateParam.split("-")
-            if (parts.size == 2) {
-                val month = parts[0].toIntOrNull()
-                val day = parts[1].toIntOrNull()
-                getTodayInHistoryInternal(month, day)
-            } else {
-                getTodayInHistoryInternal()
-            }
-        } else {
-            getTodayInHistoryInternal()
-        }
+        return todayInHistoryTool.getTodayInHistory(dateParam)
     }
     
     /**
      * 调用历史上的今天API（无参数版本）
      */
     suspend fun getTodayInHistory(): String {
-        return getTodayInHistoryInternal()
-    }
-    
-    /**
-     * 内部实现：调用历史上的今天API
-     * @param month 月份（可选）
-     * @param day 日期（可选）
-     */
-    private suspend fun getTodayInHistoryInternal(month: Int? = null, day: Int? = null): String {
-        return withContext(Dispatchers.IO) {
-            try {
-                val url = if (month != null && day != null) {
-                    "https://zeapi.ink/v1/today.php?month=$month&day=$day"
-                } else {
-                    "https://zeapi.ink/v1/today.php"
-                }
-                
-                val request = Request.Builder()
-                    .url(url)
-                    .build()
-                
-                val response = httpClient.newCall(request).execute()
-                val responseBody = response.body?.string() ?: ""
-                
-                if (response.isSuccessful) {
-                    // 解析JSON响应
-                    try {
-                        val jsonObject = JSONObject(responseBody)
-                        val dataArray = jsonObject.getJSONArray("data")
-                        
-                        val events = mutableListOf<String>()
-                        for (i in 0 until dataArray.length()) {
-                            val event = dataArray.getJSONObject(i)
-                            val year = event.getString("year")
-                            val title = event.getString("title")
-                            events.add("$year 年：$title")
-                        }
-                        
-                        if (events.isNotEmpty()) {
-                            "历史上的今天：\n\n" + events.joinToString("\n\n")
-                        } else {
-                            "暂无历史事件数据"
-                        }
-                    } catch (e: Exception) {
-                        // 如果JSON解析失败，直接返回原始响应
-                        responseBody.ifEmpty { "获取历史事件失败" }
-                    }
-                } else {
-                    "请求失败：${response.code}"
-                }
-            } catch (e: Exception) {
-                "网络请求失败：${e.message}"
-            }
-        }
+        return todayInHistoryTool.getTodayInHistory()
     }
     
     /**
      * 调用随机一言API
      */
     suspend fun getRandomQuote(): String {
-        return withContext(Dispatchers.IO) {
-            try {
-                val request = Request.Builder()
-                    .url("https://zeapi.ink/v1/onesay.php")
-                    .build()
-                
-                val response = httpClient.newCall(request).execute()
-                val responseBody = response.body?.string() ?: ""
-                
-                if (response.isSuccessful) {
-                    responseBody.ifEmpty { "获取一言失败" }
-                } else {
-                    "请求失败：${response.code}"
-                }
-            } catch (e: Exception) {
-                "网络请求失败：${e.message}"
-            }
-        }
+        return randomQuoteTool.getRandomQuote()
+    }
+    
+    /**
+     * 生成二维码
+     * @param text 要编码的文本内容
+     * @param size QR码图片尺寸（像素，宽高相等）
+     * @param margin QR码边距（像素）
+     * @param format 图片格式（jpg、png等）
+     */
+    suspend fun generateQRCode(
+        text: String,
+        size: Int = 100,
+        margin: Int = 4,
+        format: String = "jpg"
+    ): String {
+        return qrCodeGeneratorTool.generateQRCode(text, size, margin, format)
     }
     
     /**
@@ -191,14 +134,18 @@ class LocalToolService {
      * @param params 参数（可选）
      */
     suspend fun executeTool(toolId: String, params: Map<String, Any>? = null): String {
+        // 将Any类型的参数转换为String类型
+        val stringParams = params?.mapValues { it.value.toString() } ?: emptyMap()
+        
         return when (toolId) {
             "today_in_history" -> {
-                val month = params?.get("month") as? Int
-                val day = params?.get("day") as? Int
-                getTodayInHistory(month, day)
+                todayInHistoryTool.execute(stringParams)
             }
             "random_quote" -> {
-                getRandomQuote()
+                randomQuoteTool.execute(stringParams)
+            }
+            "qrcode_generator" -> {
+                qrCodeGeneratorTool.execute(stringParams)
             }
             else -> "未知的工具ID：$toolId"
         }

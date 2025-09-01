@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class ToolsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val localToolService = LocalToolService()
+    private val localToolService = LocalToolService(application.applicationContext)
 
     
     private val _tools = MutableLiveData<List<Tool>>()
