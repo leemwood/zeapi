@@ -291,6 +291,8 @@ class LocalToolDetailActivity : AppCompatActivity() {
     
     private fun formatQRCodeResult(jsonResult: String): String {
         return try {
+            Log.d("LocalToolDetail", "API响应原始数据: ${jsonResult.take(200)}...")
+            
             // 检查是否是错误信息
             if (jsonResult.startsWith("请求失败") || jsonResult.startsWith("网络请求失败") || jsonResult.startsWith("请输入要生成")) {
                 "❌ $jsonResult"
@@ -318,10 +320,12 @@ class LocalToolDetailActivity : AppCompatActivity() {
                         if (imageData.isNotEmpty()) {
                             // 保存二维码数据供下载使用
                             currentQRCodeData = imageData
+                            Log.d("LocalToolDetail", "二维码数据已保存，长度: ${imageData.length}，前50字符: ${imageData.take(50)}")
                             result.append("✅ 二维码已生成\n")
                             result.append("💡 提示：点击下载按钮保存图片到相册")
                         } else {
                             currentQRCodeData = ""
+                            Log.w("LocalToolDetail", "API返回的图片数据为空")
                             result.append("❌ 图片数据为空")
                         }
                         
@@ -376,13 +380,32 @@ class LocalToolDetailActivity : AppCompatActivity() {
         try {
             Log.d("LocalToolDetail", "开始下载二维码，数据长度: ${currentQRCodeData.length}")
             
+            if (currentQRCodeData.isEmpty()) {
+                Log.e("LocalToolDetail", "二维码数据为空")
+                Toast.makeText(this, "错误：没有可下载的二维码数据", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
             // 解码Base64数据
-            val imageBytes = Base64.decode(currentQRCodeData, Base64.DEFAULT)
+            val imageBytes = try {
+                Base64.decode(currentQRCodeData, Base64.DEFAULT)
+            } catch (e: IllegalArgumentException) {
+                Log.e("LocalToolDetail", "Base64解码失败", e)
+                Toast.makeText(this, "错误：二维码数据格式无效", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
+            if (imageBytes.isEmpty()) {
+                Log.e("LocalToolDetail", "解码后的图片数据为空")
+                Toast.makeText(this, "错误：图片数据解码失败", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
             val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
             
             if (bitmap == null) {
-                Log.e("LocalToolDetail", "图片数据解析失败")
-                Toast.makeText(this, "图片数据解析失败", Toast.LENGTH_SHORT).show()
+                Log.e("LocalToolDetail", "图片数据解析失败，数据长度: ${imageBytes.size}")
+                Toast.makeText(this, "错误：无法解析图片数据", Toast.LENGTH_SHORT).show()
                 return
             }
             
@@ -410,9 +433,26 @@ class LocalToolDetailActivity : AppCompatActivity() {
                 Log.d("LocalToolDetail", "MediaStore URI创建成功: $uri")
                 
                 var success = false
-                contentResolver.openOutputStream(uri)?.use { outputStream ->
-                    success = bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-                    Log.d("LocalToolDetail", "图片压缩结果: $success")
+                var outputStream: java.io.OutputStream? = null
+                
+                try {
+                    outputStream = contentResolver.openOutputStream(uri)
+                    if (outputStream != null) {
+                        success = bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                        Log.d("LocalToolDetail", "图片压缩结果: $success")
+                    } else {
+                        Log.e("LocalToolDetail", "无法打开输出流")
+                        Toast.makeText(this, "错误：无法创建文件输出流", Toast.LENGTH_SHORT).show()
+                        contentResolver.delete(uri, null, null)
+                        return
+                    }
+                } catch (e: Exception) {
+                    Log.e("LocalToolDetail", "写入文件时发生错误", e)
+                    Toast.makeText(this, "错误：文件写入失败 - ${e.message}", Toast.LENGTH_LONG).show()
+                    contentResolver.delete(uri, null, null)
+                    return
+                } finally {
+                    outputStream?.close()
                 }
                 
                 if (success) {
@@ -421,26 +461,29 @@ class LocalToolDetailActivity : AppCompatActivity() {
                         val updateValues = ContentValues().apply {
                             put(MediaStore.Images.Media.IS_PENDING, 0)
                         }
-                        contentResolver.update(uri, updateValues, null, null)
-                        Log.d("LocalToolDetail", "清除IS_PENDING标记")
+                        val updateResult = contentResolver.update(uri, updateValues, null, null)
+                        Log.d("LocalToolDetail", "清除IS_PENDING标记，更新结果: $updateResult")
                     }
                     
-                    Toast.makeText(this, "二维码已保存到相册", Toast.LENGTH_SHORT).show()
-                    Log.d("LocalToolDetail", "二维码保存成功")
+                    Toast.makeText(this, "✅ 二维码已保存到相册", Toast.LENGTH_SHORT).show()
+                    Log.d("LocalToolDetail", "二维码保存成功，文件路径: $uri")
                 } else {
                     Log.e("LocalToolDetail", "图片压缩失败")
-                    Toast.makeText(this, "保存失败：图片压缩失败", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "错误：图片压缩失败", Toast.LENGTH_SHORT).show()
                     // 删除失败的文件
                     contentResolver.delete(uri, null, null)
                 }
             } else {
-                Log.e("LocalToolDetail", "MediaStore URI创建失败")
-                Toast.makeText(this, "保存失败：无法创建文件", Toast.LENGTH_SHORT).show()
+                Log.e("LocalToolDetail", "MediaStore URI创建失败，可能是存储空间不足或权限问题")
+                Toast.makeText(this, "错误：无法创建文件，请检查存储空间", Toast.LENGTH_LONG).show()
             }
             
+        } catch (e: SecurityException) {
+            Log.e("LocalToolDetail", "权限错误", e)
+            Toast.makeText(this, "错误：没有存储权限，请在设置中授予权限", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             Log.e("LocalToolDetail", "下载失败", e)
-            Toast.makeText(this, "下载失败：${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "下载失败：${e.javaClass.simpleName} - ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
     
@@ -452,15 +495,16 @@ class LocalToolDetailActivity : AppCompatActivity() {
     
     private fun getRequiredPermissions(): List<String> {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            // Android 13+ 使用新的媒体权限
-            listOf(
-                Manifest.permission.READ_MEDIA_IMAGES
-            )
+            // Android 13+ 使用新的媒体权限，不需要READ_MEDIA_IMAGES来写入
+            // 使用MediaStore API写入图片到相册不需要额外权限
+            emptyList()
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // Android 10-12 使用Scoped Storage，写入MediaStore不需要权限
+            emptyList()
         } else {
-            // Android 12 及以下使用传统存储权限
+            // Android 9 及以下需要存储权限
             listOf(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
         }
     }
@@ -468,8 +512,19 @@ class LocalToolDetailActivity : AppCompatActivity() {
     private fun showPermissionDeniedDialog() {
         AlertDialog.Builder(this)
             .setTitle("权限需要")
-            .setMessage("为了保存二维码到相册，需要存储权限。请在设置中手动授予权限。")
-            .setPositiveButton("确定") { dialog, _ ->
+            .setMessage("为了保存二维码到相册，需要存储权限。请在设置中手动授予权限后重试。")
+            .setPositiveButton("去设置") { dialog, _ ->
+                dialog.dismiss()
+                // 可以添加跳转到应用设置的代码
+                try {
+                    val intent = android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    intent.data = android.net.Uri.parse("package:$packageName")
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    Toast.makeText(this, "请手动在设置中授予存储权限", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("取消") { dialog, _ ->
                 dialog.dismiss()
             }
             .show()
