@@ -4,6 +4,7 @@ import android.content.Context
 import cn.lemwood.zeapi.data.local.TodayInHistoryTool
 import cn.lemwood.zeapi.data.local.RandomQuoteTool
 import cn.lemwood.zeapi.data.local.QRCodeGeneratorTool
+import cn.lemwood.zeapi.data.local.TianGouDiaryTool
 import cn.lemwood.zeapi.data.model.Tool
 
 /**
@@ -16,6 +17,7 @@ class LocalToolService(private val context: Context) {
     private val todayInHistoryTool = TodayInHistoryTool(context)
     private val randomQuoteTool = RandomQuoteTool(context)
     private val qrCodeGeneratorTool = QRCodeGeneratorTool(context)
+    private val tianGouDiaryTool = TianGouDiaryTool(context)
     
     companion object {
         // 硬编码的工具列表
@@ -45,6 +47,15 @@ class LocalToolService(private val context: Context) {
                 category = "工具",
                 url = "https://zeapi.ink/v1/qrcode.php",
                 icon = "📱",
+                isRecommended = true
+            ),
+            Tool(
+                id = "tiangou_diary",
+                name = "舔狗日记",
+                description = "获取随机舔狗日记，共收录3.9k条内容",
+                category = "娱乐",
+                url = "https://zeapi.ink/v1/api/tgrj",
+                icon = "💔",
                 isRecommended = true
             )
         )
@@ -129,6 +140,13 @@ class LocalToolService(private val context: Context) {
     }
     
     /**
+     * 获取舔狗日记
+     */
+    suspend fun getTianGouDiary(): String {
+        return tianGouDiaryTool.getTianGouDiary()
+    }
+    
+    /**
      * 执行工具功能
      * @param toolId 工具ID
      * @param params 参数（可选）
@@ -146,6 +164,9 @@ class LocalToolService(private val context: Context) {
             }
             "qrcode_generator" -> {
                 qrCodeGeneratorTool.execute(stringParams)
+            }
+            "tiangou_diary" -> {
+                tianGouDiaryTool.execute(stringParams)
             }
             else -> "未知的工具ID：$toolId"
         }

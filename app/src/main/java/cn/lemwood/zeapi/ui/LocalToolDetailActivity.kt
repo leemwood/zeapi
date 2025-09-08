@@ -88,6 +88,7 @@ class LocalToolDetailActivity : AppCompatActivity() {
             "today_in_history" -> setupTodayInHistoryUI()
             "random_quote" -> setupRandomQuoteUI()
             "qrcode_generator" -> setupQRCodeGeneratorUI()
+            "tiangou_diary" -> setupTianGouDiaryUI()
             else -> {
                 binding.parameterContainer.visibility = View.GONE
             }
@@ -170,6 +171,20 @@ class LocalToolDetailActivity : AppCompatActivity() {
         binding.dayInput.setText("200") // 默认尺寸200px
     }
 
+    private fun setupTianGouDiaryUI() {
+        // 舔狗日记不需要任何参数，隐藏整个参数容器
+        binding.parameterContainer.visibility = View.GONE
+        
+        // 隐藏下载按钮
+        binding.btnDownload.visibility = View.GONE
+        
+        // 隐藏月份和日期输入框
+        binding.monthInputLayout.visibility = View.GONE
+        binding.dayInputLayout.visibility = View.GONE
+        binding.monthInput.visibility = View.GONE
+        binding.dayInput.visibility = View.GONE
+    }
+
     private fun executeTool() {
         val monthParam = binding.monthInput.text.toString().trim()
         val dayParam = binding.dayInput.text.toString().trim()
@@ -202,6 +217,9 @@ class LocalToolDetailActivity : AppCompatActivity() {
                             localToolService.generateQRCode(text, size, 4, "jpg")
                         }
                     }
+                    "tiangou_diary" -> {
+                        localToolService.getTianGouDiary()
+                    }
                     else -> "不支持的工具类型"
                 }
                 
@@ -224,6 +242,7 @@ class LocalToolDetailActivity : AppCompatActivity() {
                 "today_in_history" -> formatTodayInHistoryResult(jsonResult)
                 "random_quote" -> formatRandomQuoteResult(jsonResult)
                 "qrcode_generator" -> formatQRCodeResult(jsonResult)
+                "tiangou_diary" -> formatTianGouDiaryResult(jsonResult)
                 else -> jsonResult
             }
         } catch (e: Exception) {
@@ -288,6 +307,19 @@ class LocalToolDetailActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
             "❌ 格式化失败：${e.message}\n\n原始数据：\n$jsonResult"
+        }
+    }
+    
+    private fun formatTianGouDiaryResult(jsonResult: String): String {
+        return try {
+            // 舔狗日记API直接返回纯文本，不是JSON格式
+            if (jsonResult.contains("请求失败") || jsonResult.contains("网络请求异常")) {
+                "❌ $jsonResult"
+            } else {
+                "💔 舔狗日记\n\n$jsonResult\n\n📝 来源：ZeAPI 舔狗日记库（共3.9k条）"
+            }
+        } catch (e: Exception) {
+            "❌ 格式化失败：${e.message}\n\n原始内容：\n$jsonResult"
         }
     }
     
