@@ -23,14 +23,14 @@ class TianGouDiaryTool(context: Context) : BaseToolService(context) {
             try {
                 logToolExecution(toolName, "GET_DIARY", "开始获取舔狗日记")
                 
-                val headers = getRequestHeaders()
+                val headers = getCurrentHeaders()
                 val requestBuilder = Request.Builder()
                     .url("https://zeapi.ink/v1/api/tgrj")
                     .get()
                 
                 // 添加请求头
-                headers.forEach { (key, value) ->
-                    requestBuilder.addHeader(key, value)
+                headers.forEach { entry: Map.Entry<String, String> ->
+                    requestBuilder.addHeader(entry.key, entry.value)
                 }
                 
                 val request = requestBuilder.build()
