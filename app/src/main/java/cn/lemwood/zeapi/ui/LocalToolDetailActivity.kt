@@ -89,6 +89,7 @@ class LocalToolDetailActivity : AppCompatActivity() {
             "random_quote" -> setupRandomQuoteUI()
             "qrcode_generator" -> setupQRCodeGeneratorUI()
             "tiangou_diary" -> setupTianGouDiaryUI()
+            "random_anime_image" -> setupRandomAnimeImageUI()
             else -> {
                 binding.parameterContainer.visibility = View.GONE
             }
@@ -184,6 +185,26 @@ class LocalToolDetailActivity : AppCompatActivity() {
         binding.monthInput.visibility = View.GONE
         binding.dayInput.visibility = View.GONE
     }
+    
+    private fun setupRandomAnimeImageUI() {
+        // 随机二次元图片不需要输入参数，但可以选择输出格式
+        binding.parameterContainer.visibility = View.VISIBLE
+        binding.parameterTitle.text = "输出格式（可选）"
+        binding.parameterDescription.text = "选择输出格式：image（直接显示图片）或 json（显示图片信息）"
+        
+        // 显示下载按钮（用于下载图片）
+        binding.btnDownload.visibility = View.VISIBLE
+        
+        // 显示月份输入框用于选择格式，隐藏日期输入框
+        binding.monthInputLayout.visibility = View.VISIBLE
+        binding.dayInputLayout.visibility = View.GONE
+        binding.monthInput.visibility = View.VISIBLE
+        binding.dayInput.visibility = View.GONE
+        
+        // 设置提示文本
+        binding.monthInputLayout.hint = "输出格式"
+        binding.monthInput.setText("image") // 默认格式为图片
+    }
 
     private fun executeTool() {
         val monthParam = binding.monthInput.text.toString().trim()
@@ -220,6 +241,11 @@ class LocalToolDetailActivity : AppCompatActivity() {
                     "tiangou_diary" -> {
                         localToolService.getTianGouDiary()
                     }
+                    "random_anime_image" -> {
+                        val format = monthParam // 使用monthInput作为格式选择
+                        val params = if (format.isNotEmpty()) mapOf("format" to format) else emptyMap()
+                        localToolService.executeTool("random_anime_image", params)
+                    }
                     else -> "不支持的工具类型"
                 }
                 
@@ -243,6 +269,7 @@ class LocalToolDetailActivity : AppCompatActivity() {
                 "random_quote" -> formatRandomQuoteResult(jsonResult)
                 "qrcode_generator" -> formatQRCodeResult(jsonResult)
                 "tiangou_diary" -> formatTianGouDiaryResult(jsonResult)
+                "random_anime_image" -> formatRandomAnimeImageResult(jsonResult)
                 else -> jsonResult
             }
         } catch (e: Exception) {
@@ -617,5 +644,18 @@ class LocalToolDetailActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    private fun formatRandomAnimeImageResult(jsonResult: String): String {
+        return try {
+            // 随机二次元图片API返回纯文本，不是JSON格式
+            if (jsonResult.startsWith("请求失败") || jsonResult.startsWith("网络请求失败")) {
+                "❌ $jsonResult"
+            } else {
+                "🖼️ 随机二次元图片\n\n$jsonResult"
+            }
+        } catch (e: Exception) {
+            "❌ 格式化失败：${e.message}\n\n原始数据：\n$jsonResult"
+        }
     }
 }

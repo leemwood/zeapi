@@ -5,6 +5,7 @@ import cn.lemwood.zeapi.data.local.TodayInHistoryTool
 import cn.lemwood.zeapi.data.local.RandomQuoteTool
 import cn.lemwood.zeapi.data.local.QRCodeGeneratorTool
 import cn.lemwood.zeapi.data.local.TianGouDiaryTool
+import cn.lemwood.zeapi.data.local.RandomAnimeImageTool
 import cn.lemwood.zeapi.data.model.Tool
 
 /**
@@ -18,6 +19,7 @@ class LocalToolService(private val context: Context) {
     private val randomQuoteTool = RandomQuoteTool(context)
     private val qrCodeGeneratorTool = QRCodeGeneratorTool(context)
     private val tianGouDiaryTool = TianGouDiaryTool(context)
+    private val randomAnimeImageTool = RandomAnimeImageTool(context)
     
     companion object {
         // 硬编码的工具列表
@@ -56,6 +58,15 @@ class LocalToolService(private val context: Context) {
                 category = "娱乐",
                 url = "https://zeapi.ink/v1/api/tgrj",
                 icon = "💔",
+                isRecommended = true
+            ),
+            Tool(
+                id = "random_anime_image",
+                name = "随机二次元图片",
+                description = "获取随机二次元图片，支持直接显示和JSON信息格式",
+                category = "图片",
+                url = "https://zeapi.ink/v1/api/sjecy",
+                icon = "🎨",
                 isRecommended = true
             )
         )
@@ -147,6 +158,22 @@ class LocalToolService(private val context: Context) {
     }
     
     /**
+     * 获取随机二次元图片
+     */
+    suspend fun getRandomAnimeImage(): Any {
+        val result = randomAnimeImageTool.getRandomAnimeImage()
+        return result.getOrElse { "获取图片失败: ${it.message}" }
+    }
+    
+    /**
+     * 获取随机二次元图片信息（JSON格式）
+     */
+    suspend fun getRandomAnimeImageInfo(): Any {
+        val result = randomAnimeImageTool.getRandomAnimeImageInfo()
+        return result.getOrElse { "获取图片信息失败: ${it.message}" }
+    }
+    
+    /**
      * 执行工具功能
      * @param toolId 工具ID
      * @param params 参数（可选）
@@ -167,6 +194,9 @@ class LocalToolService(private val context: Context) {
             }
             "tiangou_diary" -> {
                 tianGouDiaryTool.execute(stringParams)
+            }
+            "random_anime_image" -> {
+                randomAnimeImageTool.execute(stringParams)
             }
             else -> "未知的工具ID：$toolId"
         }
